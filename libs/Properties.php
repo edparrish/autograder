@@ -27,7 +27,7 @@
 // | References:                                                          |
 // | 1. The Perl (CPAN) module Config::Properties 0.58, originally        |
 // | developed by Randy Jay Yarger, later mantained by me, and currently  |
-// | mantained by Salvador Fandiño.                                       |
+// | mantained by Salvador FandiÃ±o.                                       |
 // | See: http://search.cpan.org/search?query=Config%3A%3AProperties      |
 // | 2. The Java docs for the java.util.Properties API which can be found |
 // | at http://java.sun.com/j2se/1.3/docs/api/index.html .                |
@@ -114,7 +114,7 @@
  * file_put_contents('site.properties', $p->toString(true));
  * @endcode
  *
- * Copyright © 2005, Craig Manley.
+ * Copyright Â© 2005, Craig Manley.
  *
  */
 
