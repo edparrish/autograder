@@ -1,0 +1,22 @@
+a:hover {
+  color: #FFFFFF; /* White */
+  background: #9932CC; /* DarkOrchid */
+}
+table { border:1px dotted black }
+th, td { text-align:center; }
+th {
+    border-bottom:2px solid black;
+    background: #EEE
+}
+tr:nth-child(odd) { background: #DDD }
+caption {
+    font-size:x-large;
+    font-weight:bold;
+}
+input[type="file"] {
+    max-width: 80px;
+}
+input[type="text"] {
+    position: absolute;
+    left: 190px;
+}
