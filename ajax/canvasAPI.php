@@ -8,9 +8,10 @@ The canvasDomain is the URL for the Canvas API. For Cabrillo College, for exampl
 The token is a cryptographically unique string of characters and numbers you must generate in Canvas. To generate one, login to Canvas, go to
 "Accounts" and "Settings" and click on the "New Access Token" button.
 
-For Windows, need SSL CA cert from: https://curl.haxx.se/docs/caextract.html
-Download on the page from link: cacert.pem
+Windows needs an SSL CA cert from: https://curl.haxx.se/docs/caextract.html
+Download `cacert.pem` from the page by clicking the link.
 Save in location of your choice and update cacert path to match your location.
+
 
 @author Kenneth Larsen from https://community.canvaslms.com/thread/2681 on 8/2016.
 @author Ed Parrish changes and additions
@@ -24,8 +25,6 @@ $token = 'put token between quotes';
 
 // This is the header containing the authorization token from Canvas
 $tokenHeader = array("Authorization: Bearer ".$token);
-
-
 
 $logfp;
 function startCURLLogging($append=false) {
