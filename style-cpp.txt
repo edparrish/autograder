@@ -1,0 +1,40 @@
+# style5.txt
+
+# assign +/- point value or "skip" (without the quotes) to omit the test
+FileCommentBlock = -1
+
+# assign +/- point value or "skip" (without the quotes) to omit the test
+AuthorTag = -.5
+
+# assign +/- point value or "skip" (without the quotes) to omit the test
+VersionTag = -.5
+
+# assign +/- point value or "skip" (without the quotes) to omit the test
+Indentation = -1
+
+# assign +/- point value or "skip" (without the quotes) to omit the test
+LineLength = skip
+# Maximum line length
+LineLengthMaximum = 83
+
+# assign +/- point value or "skip" (without the quotes) to omit the test
+VariableName = -1
+# Regular expression to match against name
+VariableNameRegEx = ^[a-z][a-zA-Z0-9]*(_[a-zA-Z0-9]+)*$
+
+# assign +/- point value or "skip" (without the quotes) to omit the test
+FileTabCharacter = -1
+
+# assign +/- point value or "skip" (without the quotes) to omit the test
+WhitespaceAroundOperator = skip
+
+# assign +/- point value or "skip" (without the quotes) to omit the test
+MagicNumber = -1
+
+# assign +/- point value or "skip" (without the quotes) to omit the test
+ConstantName = -1
+# Regular expression to match against name
+ConstantNameRegEx = ^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$
+
+# New this assignment
+# nothing
