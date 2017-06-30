@@ -16,7 +16,8 @@ Save in location of your choice and update cacert path to match your location.
 @author Kenneth Larsen from https://community.canvaslms.com/thread/2681 on 8/2016.
 @author Ed Parrish changes and additions
 */
-define("CACERT_PATH", "/courses/tools/autograde5/ajax/cacert.pem");
+if (file_exists('../ag-config.php')) include_once '../ag-config.php';
+define("CACERT_PATH", ROOT_DIR.'/ajax/cacert.pem');
 
 // Set to your domain.
 $canvasDomain = 'college.instructure.com';
