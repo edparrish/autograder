@@ -18,9 +18,9 @@ Save in location of your choice and update cacert path to match your location.
 define("CACERT_PATH", "/courses/tools/autograde5/ajax/cacert.pem");
 
 // Set to your domain.
-$canvasDomain = 'cabrillo.instructure.com';
+$canvasDomain = 'college.instructure.com';
 // Generate in Canvas as described above.
-$token = '6243~joPtAl28NNePHZXf7Lfkcb8wXrzx2ilHHqeFBlxFFPVanBMISkMwhqDN5xU8Mz6i';
+$token = 'put token between quotes';
 
 // This is the header containing the authorization token from Canvas
 $tokenHeader = array("Authorization: Bearer ".$token);
