@@ -1,4 +1,4 @@
-// jQuery code
+// jQuery code for manager.html
 $(document).ready(function() {
   var msg = $("#msg").text("Loading courses into Select...");
   $.ajax( {
