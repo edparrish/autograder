@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Autograde Manager</title>
+<meta name="author" content="Edward Lee Parrish">
+<link href="css/manager.css" rel="stylesheet" type="text/css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript" src="js/manager.js"></script>
+</head>
+
+<body>
+<h1>Autograde Manager</h1>
+<div id="courseSelect"></div>
+
+<pre id="msg"></pre>
+
+<form action="#">
+<fieldset>
+<legend>Settings:</legend>
+<label for="iofolder">Download/upload folder:</label>
+<input id="iofolder" type="text" size="40" value="/courses/cs11/homework/A0X"><br>
+<label for="scriptfolder">Script location folder:</label>
+<input id="scriptfolder" type="text" size="40" value="/courses/cs11/homework/scripts"><br>
+</fieldset>
+</form>
+
+<div id="ctrlPanel"></div>
+
+<h4>Helpful Links During Development</h4>
+<ul>
+<li><a href="https://cabrillo.instructure.com/doc/api/live" class="offsite" target="_blank">Canvas Live API</a></li>
+<li><a href="https://canvas.instructure.com/doc/api/all_resources.html" class="offsite" target="_blank">Canvas LMS REST API Documentation</a></li>
+<li><a href="https://cabrillo.instructure.com/api/v1/courses/" class="offsite" target="_blank">Canvas API call testing</a></li>
+<li><a href="http://konklone.io/json/" class="offsite" target="_blank">Convert JSON to CSV</a></li>
+<li><a href="https://community.canvaslms.com/groups/canvas-developers" class="offsite" target="_blank">Canvas Developer's group</a></li>
+<li>Apache error.log: /xampp/apache/logs/error.log</li>
+</ul>
+
+</body>
+</html>
