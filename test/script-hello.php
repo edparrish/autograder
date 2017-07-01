@@ -1,5 +1,5 @@
 <?php
-// Test the example file hello.cpp.
+// Test the example file hello.cpp, located in the testfiles subfolder.
 // Absolute path to grader superclass
 include_once("../grader.php");
 // Absolute path to student submissions
