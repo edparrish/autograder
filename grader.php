@@ -25,7 +25,6 @@ define("DEBUG", "false"); // set true for debug statements otherwise false
     @version 1.5 8/01/16
 */
 class Grader {
-    private $errout = ERROUT;
     private $gradeLogName;
     private $gradeLogHandle;
     private $summaryLogHandle;
@@ -284,9 +283,7 @@ class Grader {
             if (!file_exists($sqlFile)) {
                 die("Error: $sqlFile does not exist (aborting)\n");
             }
-            //$errout = ERROUT;
-            require(ROOT_DIR.'/includes/dbconvars.php'); // 4/14
-            //$info = `$errout mysql -u$dbuser -p$dbpwd $dbname < $sqlFile`;
+            require(ROOT_DIR.'/includes/dbconvars.php');
             $info = `mysql -u$dbuser -p$dbpwd $dbname < $sqlFile`;
             if ($info) {
                 die("Error loading sqlFile=$sqlFile: $info (aborting)\n");
@@ -601,6 +598,10 @@ class Grader {
      */
     function isErrorMessage($message, $caseMatters = false) {
         return $this->results->messageExists($message, $caseMatters);
+    }
+
+    protected function getResults() {
+        return $this->results;
     }
 
     //***** Reporting Functions *****
