@@ -26,11 +26,11 @@ TestPairProgClaim(&$grader)
 TestRunLogSQL($sql, $outFile="out.log", $dbName="test")
 TestRunPage($pageName, $outFileName = "out.html")
 *TestStyleCPP($fileList, $config=null, $summarize=true, $logFile="style.log")
-TestStyleJava($configFile=CHECK_STD, $glob="*.java")--old
-TestStylePHP($globList = "*.php", $log = "style.log")--old
+TestStyleJava($configFile=CHECK_STD, $glob="*.java")--old CheckStyle
+TestStylePHP($globList = "*.php", $log = "style.log")--minimal
 *TestReadme(&$grader)
 TestValidateHTML($globList="*.html", $log="validate.log")--old
-Note: Parameter list ordered to allow those with default values at end.
+Note: Parameter lists ordered to allow those with default values at end.
 *=recently updated
 
 TestCase ideas:
@@ -43,6 +43,7 @@ TestDiff: returns % same? array_diff
 require_once 'ag-config.php';
 require_once 'filecontents.php';
 require_once ROOT_DIR.'/includes/util.php';
+// see defines near each test case
 
 /**
  * Superclass for all test-case classes.
@@ -256,12 +257,14 @@ class TestCompareFiles extends TestCase {
         $fileList = FileContents::toFileContents($file1);
         $this->file1 = $fileList[0];
         if (sizeof($fileList) > 1) {
-            echo "TestCompareFiles: multiple files found, choosing first: $this->file1\n";
+            $name = $this->file1->getName();
+            echo "TestCompareFiles: mutiple files found, choosing first: $name\n";
         }
         $fileList = FileContents::toFileContents($file2);
         $this->file2 = $fileList[0];
         if (sizeof($fileList) > 1) {
-            echo "TestCompareFiles: mutiple files found, choosing first: $this->file2\n";
+            $name = $this->file2->getName();
+            echo "TestCompareFiles: mutiple files found, choosing first: $name\n";
         }
         $this->ignoreCase = $ignoreCase;
     }
@@ -421,6 +424,7 @@ class TestCompileCPP extends TestCase {
         @param $pathName The path and name of the file to compile.
         @param $cmd The command string to execute, overridding the default. Can use make to invoke makefiles.
      */
+  //function TestCompileCPP($cmd, $log="compile.log", $msg="", $clean=true)
     function TestCompileCPP($pathName, $cmd = "") {
         $this->testName = get_class();
         $this->pathName = $pathName;
@@ -441,7 +445,6 @@ class TestCompileCPP extends TestCase {
         @return true if the code compiles, otherwise returns false.
      */
     function runTest(&$tr, $sectionName) {
-        $errout = ERROUT;  // errout collects info from Windows
         $tr->setProperty("compiles", false); // pessimistic
         // Open log file and write header
         if (!$handle = fopen($this->log, 'ab')) {
@@ -472,7 +475,12 @@ class TestCompileCPP extends TestCase {
         $path = dirname($testFile);
         if ($path == NULL) $path =".";
         chdir($path); // In case of spaces in dir names
-        $info = `$errout $cmd`; // run at command line
+        if (strtoupper(substr(php_uname('s'), 0, 3)) === 'WIN') {
+            $errout = ERROUT;  // errout collects info from Windows
+            $info = `$errout $cmd`; // run at Windows command line
+        } else {
+            $info = `$cmd 2>&1`; // run at command line
+        }
         $info = trim($info);
         chdir($cwd); // return to original working dir
         // Collect errors and warnings
@@ -582,7 +590,6 @@ class TestCompileJava extends TestCase {
         @return true if the code compiles, otherwise returns false.
      */
     function runTest(&$tr, $sectionName) {
-        $errout = ERROUT;  // errout collects info for Windows
         $logExists = file_exists("compile.log");
 
         // Open log file and write header
@@ -602,12 +609,17 @@ class TestCompileJava extends TestCase {
 
         // Compile files
         fwrite($handle, "Command: $this->cmd\n");
-        $info = `$errout $this->cmd`;
+        if (strtoupper(substr(php_uname('s'), 0, 3)) === 'WIN') {
+            $errout = ERROUT;  // errout collects info for Windows
+            $info = `$errout $this->cmd`;
+        } else {
+            $info = `$this->cmd 2>&1`;
+        }
         $info = trim($info);
         fwrite($handle, $info."\n");
 
         if (substr_count($info, "Usage: javac") != 0) {
-            die("Bad or incomplete compiler command: $this->cmd\n$info\n");
+            echo "Bad or incomplete compiler command: $this->cmd\n$info\n";
         }
 
         // Collect errors and warnings
@@ -1024,7 +1036,6 @@ class TestJavaUnit extends TestCase {
         @return true if no errors are detected, otherwise returns false
     */
     function runTest(&$tr, $sectionName) {
-        $errout = ERROUT;  // errout collects info for Windows
 
         // Copy test file into current directory
         $testName = basename($this->testFile);
@@ -1049,8 +1060,12 @@ class TestJavaUnit extends TestCase {
         $cp = $this->testDir != "." ? "-cp $this->testDir " : "";
         $compileCmd = "javac $cp$this->testDir/$baseTestName.java";
         //var_dump($compileCmd);
-        $info = `$errout $compileCmd`;
-        //$info = `$errout javac *.java`; // old command 11/21/2009
+        if (strtoupper(substr(php_uname('s'), 0, 3)) === 'WIN') {
+            $errout = ERROUT;  // errout collects info for Windows
+            $info = `$errout $compileCmd`;
+        } else {
+            $info = `$compileCmd 2>&1`;
+        }
         if ($this->testFile !== $testName) { // do not remove if the only file
             unlink("$this->testDir/$testName")
                 or die("Could not delete test file: $testName\n");
@@ -1071,8 +1086,12 @@ class TestJavaUnit extends TestCase {
         $fileName = basename($testName, ".java");
         $runCmd = "java $cp$fileName";
         //var_dump($runCmd);
-        $info = `$errout $runCmd"`;
-        //$info = `$errout java "$fileName"`; // old command 11/21/2009"
+        if (strtoupper(substr(php_uname('s'), 0, 3)) === 'WIN') {
+            $errout = ERROUT;  // errout collects info for Windows
+            $info = `$errout $runCmd"`;
+        } else {
+            $info = `$runCmd 2>&1"`;
+        }
         $info = trim($info);
         if (strlen($info) === 0) {
             fwrite($handle, "No errors during test\n\n");
@@ -1143,7 +1162,6 @@ class TestLoadDB extends TestCase {
         cause this test to fail.
      */
     function runTest(&$tr, $sectionName) {
-        $errout = ERROUT;  // errout collects info for Windows
         $errCount = 0;
 
         // Open log file and write header
@@ -1192,14 +1210,13 @@ class TestLoadDB extends TestCase {
             fwrite($fh, $contents);
             fclose($fh);
         }
-        // NTR: following does not work
-        //if (preg_match("/\015/", $contents)) {
-        //    echo "Warning: Found Mac file...";
-        //}
-        //$contents = preg_replace("/\015/", "", $contents);
-
         // Load the database
-        $info = `$errout mysql -u$dbuser -p$dbpwd $dbname < "$file"`;
+        if (strtoupper(substr(php_uname('s'), 0, 3)) === 'WIN') {
+            $errout = ERROUT;  // errout collects info for Windows
+            $info = `$errout mysql -u$dbuser -p$dbpwd $dbname < "$file"`;
+        } else {
+            $info = `mysql -u$dbuser -p$dbpwd $dbname < "$file" 2>&1`;
+        }
         fwrite($handle, "Loading into database file: $file\n");
         fwrite($handle, $info);
 
@@ -1400,7 +1417,6 @@ class TestRunLogSQL extends TestCase {
         @return true if $sql produced an output, otherwise false.
      */
     function runTest(&$tr, $sectionName) {
-        $errout = ERROUT;  // errout collects info for Windows
         if (!$handle = fopen($this->outFile, "ab")) {
             die("Cannot open $this->outFile");
         }
@@ -1488,11 +1504,6 @@ class TestRunPage extends TestCase {
         $url = str_replace('+', '%20', $url); // fix urlencode
 
         // Run the page from a server and save in a file
-        //`lynx.bat -source $url > $this->outFile`;
-        //`lynx.bat -dump $url > out.txt`;
-        //$info = file_get_contents($this->outFile);
-        //$errout = ERROUT;  // errout collects info for Windows
-        //$info = `$errout lynx.bat -source $url`;
         $info = file_get_contents($url);
         if (!$info) {
             echo "Could not read file: $url\n";
@@ -2616,7 +2627,6 @@ class TestValidateHTML extends TestCase {
         }
 
         require_once 'Services/W3C/HTMLValidator.php';
-        $errout = ERROUT;  // errout collects info for Windows
 
         // Open log file and write header
         $logExists = file_exists($this->log);
