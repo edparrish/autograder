@@ -1,0 +1,9 @@
+Course #,Section #,SectionNNN,AltId,LastName,FirstName,Email,Max Pt-Weighted Sum,Pt-Weighted Sum, Max Raw Sum, Raw Sum,Correct,CorrectLate,CorrectUnassigned,Incorrect,IncorrectUnassigned,00000-10572,00000-10573,00000-10574,00000-10575,00000-10580,00000-10581,00000-10582,00000-10583,07748-00005,00000-10720,00000-10639,00000-10640,00000-10643,00000-10644,00000-10645,00000-10658,00000-10660,00000-10661
+DATES,,,,,,,,,,,,,,,,3/8/2017 21:00,3/8/2017 21:00,3/8/2017 21:00,3/8/2017 21:00,3/8/2017 21:00,3/8/2017 21:00,3/8/2017 21:00,3/8/2017 21:00,3/8/2017 21:00,3/8/2017 21:00,3/8/2017 21:00,3/8/2017 21:00,3/8/2017 21:00,3/8/2017 21:00,3/8/2017 21:00,3/8/2017 21:00,3/8/2017 21:00,3/8/2017 21:00
+POINTS,,,,,,,,,,,,,,,,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+CS-11,95826,51450,null,Student,First,studentfirst@somewhere.com,18,15,18,15,15,0,0,3,0,C,X,C,C,C,C,C,C,X,X,C,C,C,C,C,C,C,C
+CS-11,95826,51450,null,Student,Second,studentsecond@gmail.com,18,18,18,18,18,0,0,0,0,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C
+CS-11,95826,51450,null,Student,Third,studentthird@gmail.com,18,0,18,0,0,0,0,0,0,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-
+CS-11,95826,51450,null,Student,Fourth,studentfourth@somewhere.com,18,18,18,18,0,18,0,0,0,L,L,L,L,L,L,L,L,L,L,L,L,L,L,L,L,L,L
+CS-11,95826,51450,null,Perish,Ed,eparrish98@somewhere.com,18,0,18,0,0,0,0,0,0,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-
+CS-11,95826,51450,eparrish,Parrish,Edward,edparris@somewhere.com,18,0,18,0,0,0,0,0,0,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-
