@@ -722,8 +722,11 @@ class Grader {
                 $contents = file_get_contents($file);
                 fwrite($this->gradeLogHandle, "\n".$contents);
                 // sometimes unlink gives warning for compile.log in cpp
-                `del $file`; // windows only workaround
-                //unlink($file) or print "Could not unlink: $file\n";
+                if (strtoupper(substr(php_uname('s'), 0, 3)) === 'WIN') {
+                    `del $file`; // windows only workaround
+                } else {
+                    unlink($file) or print "Could not unlink: $file\n";
+                }
             }
         }
     }
