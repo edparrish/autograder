@@ -1,0 +1,3 @@
+SELECT ID, ProductName, SupplierID, InStock
+FROM products
+ORDER BY SupplierID DESC, ProductName

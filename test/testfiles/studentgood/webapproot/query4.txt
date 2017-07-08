@@ -1,0 +1,6 @@
+SELECT customers.ID, customers.LName, customers.FName,
+  orders.ID, productID, OrderDate
+FROM customers, orders, orderitems
+WHERE customers.ID = orders.CustomerID
+AND orders.ID = orderitems.OrderID
+ORDER BY orders.ID;

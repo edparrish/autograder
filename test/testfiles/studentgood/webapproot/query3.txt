@@ -1,0 +1,3 @@
+SELECT SupplierName, ProductName
+FROM suppliers LEFT JOIN products
+ON suppliers.ID = products.SupplierID;

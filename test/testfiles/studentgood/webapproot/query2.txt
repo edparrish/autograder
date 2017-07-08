@@ -1,0 +1,4 @@
+SELECT products.ID, ProductName,
+  suppliers.ID, SupplierName
+FROM products, suppliers
+WHERE products.SupplierID = suppliers.ID;
