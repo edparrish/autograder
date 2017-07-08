@@ -77,7 +77,7 @@ class Grader {
 
     // Setup test conditions
     function startTest() {
-        $this->timestamp = mktime();
+        $this->timestamp = time();
         if (file_exists(SUMMARY_LOG)) copy(SUMMARY_LOG, "summary.bak");
         if (!$this->summaryLogHandle = fopen(SUMMARY_LOG, "w")) {
             die("Cannot open ".SUMMARY_LOG);
@@ -154,7 +154,7 @@ class Grader {
         $msg .= " ($this->countHours students)\n";
         echo $msg;
         fwrite($this->summaryLogHandle, $msg);
-        $msg = "Elapsed time: ".(mktime() - $this->timestamp)." seconds\n";
+        $msg = "Elapsed time: ".(time() - $this->timestamp)." seconds\n";
         echo $msg;
         fwrite($this->summaryLogHandle, $msg);
         fclose($this->summaryLogHandle);
