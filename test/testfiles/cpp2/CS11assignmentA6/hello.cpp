@@ -1,10 +1,4 @@
-/**
-    CS-11 Asn 0, hello.cpp
-    Purpose: Prints a message to the screen.
-
-    @author Ed Parrish
-    @version 1.0 6/14/17
- */
+// Missing file comment block
 #include <iostream>
 using namespace std;
 
