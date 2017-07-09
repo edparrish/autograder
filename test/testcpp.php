@@ -2,8 +2,8 @@
 // Test all C++ features
 include_once("../grader.php");
 // Absolute path to student submissions
-define("TEST_DIR", ROOT_DIR.'\test\testfiles');
-define("CHECK_CFG", ROOT_DIR.'\test\style-cpp.txt');
+define("TEST_DIR", ROOT_DIR.'/test/testfiles');
+define("CHECK_CFG", ROOT_DIR.'/test/style-cpp.txt');
 define("CODELAB_TABLE", "roster");
 
 $students = null; // for all students
@@ -28,16 +28,6 @@ I suggest you get tutoring or work with a partner.
 ");
 
 class GradeRunner extends Grader {
-    // Load CodeLab roster.csv files into database.
-    // rostertweaks.sql has updates for students who signup with wrong name
-    function startTest() {
-        parent::startTest();
-        $codeLabFile = realpath("roster.csv");
-        fileExists($codeLabFile) or
-            die("Missing CodeLab results file: $codeLabFile\n");
-        $this->loadCodeLab($codeLabFile, CODELAB_TABLE, "rostertweaks.sql");
-    }
-
     // Test commands to run for each student submission.
     function test() {
         deleteGlobRec("*.[eE][xX][eE]", $this->getDir()); // Windows
@@ -116,19 +106,6 @@ class GradeRunner extends Grader {
         $eval = new ReadmeEvaluator(2);
         $score = $this->report($eval, "README.txt Score (2):");
 
-        // CodeLab
-        $maxPts = 8;
-        $numExer = 17;
-        $each = $maxPts / $numExer;
-        $firstName = $this->getFirstName();
-        $lastName = $this->getLastName();
-        $this->run(new TestCodeLab(CODELAB_TABLE, $lastName, $firstName));
-        $eval = new CodeLabEvaluator($each, $each, 0, $maxPts);
-        $scrCL = $this->report($eval, "Lab Score ($maxPts):");
-        $this->writeGradeLog(" -Nice!\n", $maxPts == $scrCL);
-        $this->writeGradeLog(" -If you have problems with an exercise, please ask for help\n", $scrCL < $maxPts && $scrCL >= $maxPts - 2);
-        $this->writeGradeLog(" -You enrolled in CodeLab, why not do all the exercises?\n", $scrCL < $maxPts - 2);
-
         // Subtotal score
         $subtotal = $this->getScore();
         $maxScore = $this->getMaxScore();
@@ -200,7 +177,7 @@ class GradeRunner extends Grader {
 
     function testCakeRedux($pts, $xtraName, $xtraFile) {
         // Compile
-        $baseName = $this->checkCompile($pts, $xtraName, $xtraFile, false);
+        $baseName = $this->checkCompile($pts, $xtraName, $xtraFile);
         $compiles = $this->getProperty("compiles");
         if (!$compiles) return; // return early to prevent other messages
         // Check source code for required elements
@@ -281,14 +258,13 @@ class GradeRunner extends Grader {
 
 
     /**
-        Checks file name, existance and compiles the file.
+        Checks for $fileName existance and compiles the file.
 
         @param $pts Number of points for the project
         @param $fileName Specified file name
         @param $testFile file pathname used by the student
-        @param $clean Set true to delete any .exe and .o files first.--deprecated
     */
-    function checkCompile($pts, $fileName, $testFile, $clean) {
+    function checkCompile($pts, $fileName, $testFile) {
         // Check name
         $isFile = $testFile && fileExists($testFile);
         $this->fail(new TestCondition($isFile), -$pts,
