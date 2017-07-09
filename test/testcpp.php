@@ -53,7 +53,10 @@ class GradeRunner extends Grader {
             $path = dirname($testFile);
             if ($path == NULL) $path =".";
             $baseName = basename($testFile, ".cpp");
-            $exe = $path.DIRECTORY_SEPARATOR."$baseName.exe";
+            $exe = $path.DIRECTORY_SEPARATOR.$baseName;
+            if (strtoupper(substr(php_uname('s'), 0, 3)) === 'WIN') {
+                $exe .= ".exe";
+            }
             // Execute with predefined input.
             $cmd = "$exe < ../../input/input1.txt"; //"
             $this->runLogCmd($cmd, "out1.log", true, 4);
@@ -84,6 +87,7 @@ class GradeRunner extends Grader {
         $score = $this->report($eval, "Score for $testName:");
 
         // Programming style
+        $tfc->reload(); // restore stripped comments
         $path = dirname($tfc->getPathname());
         $this->pass(new TestCondition(substr_count($path, " ") > 0), -1,
             "Do NOT put spaces in folder names like you did with \"$path\"");
@@ -114,28 +118,11 @@ class GradeRunner extends Grader {
         // Extra credit
         $tc = new TestPairProgClaim($this);
         $isPP = $this->pass($tc, 2, "Used pair programming");
-        // Lightbot XC
-        $this->testLightbot(2);
-        // Test file: cakeredux.cpp
-        $xtraName = "cakeredux.cpp";
-        $glob = "[Cc]ake[Rr]*.cpp"; // acceptable but distinct glob
-        $contentRE = "/\bMint/i";
-        $xtraFile = $this->findClosestFile($xtraName, $glob, $contentRE);
-        if ($xtraFile) {
-            $xtraBaseName = basename($xtraFile);
-            $this->run(new TestCondition(true,
-                "Added extra credit file: $xtraBaseName", 2));
-            $numIssues = $this->getSectionResultsCount();
-            $this->testCakeRedux(2, $xtraName, $xtraFile);
-            $numIssues = $this->getSectionResultsCount() - $numIssues;
-            $this->run(new TestCondition(!$numIssues, "-Nice cake code!", 0));
-        }
-        $this->report(new ValueEvaluator(0, 6), "Extra Credit Score:", true);
-        $this->writeGradeLog(XTRA_MSG);
+        $this->report(new ValueEvaluator(0, 2), "Extra Credit Score:");
 
         // Total score
-        $superior = 116;
-        if($isPP) $superior = 123;
+        $superior = 100;
+        if($isPP) $superior = 110;
         $good = "Overall good work with a few problem areas.";
         $sat = "Satisfactory overall with some problem areas.";
         $pass = "Passable overall with some problem areas.";
@@ -158,155 +145,6 @@ class GradeRunner extends Grader {
         );
         $this->reportOverall($maxScore, false, $comments);
         $this->writeGradeLog(OVERALL_MSG);
-    }
-
-    function testLightbot($pts) {
-        $readme = $this->getReadme();
-        $readmeFC = $readme->getReadmeFileContents();
-        $rmExists = $readme->isReadme();
-        $pat = "/mind\s+(is\s+)?get.*numb/i";
-        $level9 = $this->pass(new TestMatch($pat, $readmeFC), $pts,
-            "Completed game level 9+", $rmExists);
-        $pat = "/Now.*thinking\s+like.*programmer/i";
-        $level8 = $this->pass(new TestMatch($pat, $readmeFC), $pts - 1,
-            "Completed game level 8", $rmExists && !$level9);
-        $pat = "/Put.*back.*functions/i";
-        $level7 = $this->pass(new TestMatch($pat, $readmeFC), $pts - 1,
-            "Completed game level 7", $rmExists && !($level8 || $level9));
-    }
-
-    function testCakeRedux($pts, $xtraName, $xtraFile) {
-        // Compile
-        $baseName = $this->checkCompile($pts, $xtraName, $xtraFile);
-        $compiles = $this->getProperty("compiles");
-        if (!$compiles) return; // return early to prevent other messages
-        // Check source code for required elements
-        $tfc = new FileContents($xtraFile);
-        $tfc->stripComments();
-        $multiInputRE = "/\bcin\s*\>\>\s*\w+\s*\>\>\s*\w+/";
-        $isMultiIn = $this->pass(new TestMatch($multiInputRE, $tfc), -2,
-            "Cannot have more than one cake input variable (spec 1-3)\n --!!Must manual test!!", $xtraFile);
-        $this->fail(new TestMatchCount("/\bcin\b/", $tfc, 0, 2), -1,
-            "Cannot have more than two cin statements (spec 1-3)", $xtraFile);
-        $re = "/\w+\.substr\s*\(/";
-        $this->fail(new TestMatch($re, $tfc), -1,
-            "Need substr() for the problem (spec 1-4)", $xtraFile);
-        $hasWhile = $this->fail(new TestMatch("/\bwhile\b/", $tfc), -1,
-            "Missing while loop (spec 1-5)", $xtraFile);
-        if ($compiles) {
-            $exe = "$baseName.exe";
-            // First run
-            $this->copyFile("../../solutions/asn06/p4r1doc.log", "p4r1doc.log");
-            $testCmd = "$exe < ../../solutions/asn06/p4r1_cake.txt"; //"
-            $this->runLogCmd($testCmd, "p4r1out.log", $xtraFile, 2);
-            // Second run
-            $this->copyFile("../../solutions/asn06/p4r2doc.log", "p4r2doc.log");
-            $testCmd2 = "$exe < ../../solutions/asn06/p4r2_cake.txt";//"
-            $this->runLogCmd($testCmd2, "p4r2out.log", $xtraFile, 2);
-            // Third run
-            $this->copyFile("../../solutions/asn06/p4r3doc.log", "p4r3doc.log");
-            $testCmd2 = "$exe < ../../solutions/asn06/p4r3_cake.txt";//"
-            $this->runLogCmd($testCmd2, "p4r3out.log", $xtraFile, 2);
-            // Check the output for errors
-            $fc1 = new FileContents("p4r1out.log");
-            $fc2 = new FileContents("p4r2out.log");
-            $fc3 = new FileContents("p4r3out.log");
-            //$fcList = array($fc1, $fc2, $fc3);
-            $this->pass(new TestMatch("/Killing process/i", $fc1), -1,
-                "Process timeout entering: CM12");
-            $this->pass(new TestMatch("/stackdumpfile/i", $fc1), -1,
-                "Stack dump error entering: CM12 n");
-            $this->pass(new TestMatch("/stackdumpfile/i", $fc2), -1,
-                "Stack dump error entering: PC999 n");
-            $this->pass(new TestMatch("/stackdumpfile/i", $fc3), -1,
-                "Stack dump error entering: T1 n");
-            // Check the output of all runs
-            $fc1->removeLines(0, 3);
-            $pat = "/12\s*Ch\w+\s+Mint\s+cak\w+/i";
-            $pass = $this->fail(new TestMatch($pat, $fc1), -1,
-                "Input CM12 did not output: 12 Chocolate Mint cakes (spec 1, 5)");
-            $this->run(new TestCondition(!$pass,
-                "Your output: [".$fc1->toString()."]"));
-            $this->fail(new TestMatch("/[$ :l]419\.88/", $fc1), -1,
-                "Missing/wrong order total for CM12, s/b 419.88 (spec 3,4,5)");
-            $fc2->removeLines(0, 3);
-            $pat = "/999\s+Pum\w+\s+Che\w+/i";
-            $pass = $this->fail(new TestMatch($pat, $fc2), -1,
-                "Input PC999 did not output: 999 Pumpkin Cheesecakes (spec 1, 5)");
-            $this->run(new TestCondition(!$pass,
-                "Your output: [".$fc2->toString()."]"));
-            $this->fail(new TestMatch("/[$ :l]34955\.01/", $fc2), -1,
-                "Missing/wrong order total for PC999, s/b 34955.01 (spec 3,4,5)");
-            $fc3->removeLines(0, 3);
-            $pat = "/1\s*Tiram\w+\s+cak\w+/i";
-            $pass = $this->fail(new TestMatch($pat, $fc3), -1,
-                "Input T1 did not output: 1 Tiramisu cakes (spec 1, 6)");
-            $this->run(new TestCondition(!$pass,
-                "Your output: [".$fc3->toString()."]"));
-            $this->fail(new TestMatch("/[$ :l]34\.99/", $fc3), -1,
-                "Missing/wrong order total for T19, s/b 34.99 (spec 2,3)");
-        }
-        $this->pass(new TestMatch("/case\s*['\"\w]+\s*:/", $tfc), 0,
-            "POSSIBLE CHEATING DETECTED: use of case", $xtraFile);
-        $this->pass(new TestMatch("/\w+\.rbegin\s*\(/", $tfc), 0,
-            "POSSIBLE CHEATING DETECTED: use of rbegin() iterator", $xtraFile);
-        $this->pass(new TestMatch("/\w+\.back\s*\(/", $tfc), 0,
-            "POSSIBLE CHEATING DETECTED: use of back()", $xtraFile);
-        $this->pass(new TestMatch("/\w+\.find_first_of\s*\(/", $tfc), 0,
-            "POSSIBLE CHEATING DETECTED: use of find_first_of()", $xtraFile);
-    }
-
-
-    /**
-        Checks for $fileName existance and compiles the file.
-
-        @param $pts Number of points for the project
-        @param $fileName Specified file name
-        @param $testFile file pathname used by the student
-    */
-    function checkCompile($pts, $fileName, $testFile) {
-        // Check name
-        $isFile = $testFile && fileExists($testFile);
-        $this->fail(new TestCondition($isFile), -$pts,
-            "$fileName was not turned in :(");
-        $baseName = basename($testFile);
-        $fileBase = basename($fileName, ".cpp");
-        $this->fail(new TestFileExists("$fileBase*.cpp"), 0,
-            "Wrong file name: $baseName, should be: $fileName\n --You must use the specified file name\n --I did not take off this time", $testFile);
-        // Check spaces in file name
-        $this->pass(new TestCondition(substr_count($baseName, " ") > 0), -1,
-            "1:Do NOT put spaces in file names like \"$baseName\"\n --Spaces make it harder to compile from the command line.");
-        $origName = ""; // flag if renaming needed.
-        // Rename if spaces in file path
-        if (substr_count($baseName, " ") > 0) {
-            $path = dirname($testFile);
-            if ($path == NULL) $path =".";
-            $cwd = getcwd();
-            chdir($path); // In case of spaces in dir names
-            $origName = $baseName;
-            $newName = str_replace(' ', '', $origName);
-            rename($origName, $newName);
-            chdir($cwd); // return to original working dir
-            $origPathName = $testFile;
-            $testFile = $path.DIRECTORY_SEPARATOR.$newName;
-        }
-        $testBase = basename($testFile, ".cpp"); // file of file.ext
-        // Strip .cpp if student has multiple extensions.
-        $base = $testBase;
-        while (strrpos($base, ".cpp")) {
-            $base = basename($base, ".cpp");
-        }
-        $this->fail(new TestCondition($base === $testBase), -1,
-            "1:Too many .cpp extensions");
-        // Compile
-        $compiles = $this->fail(new TestCompileCPP($testFile), -$pts,
-            "Did not compile--code must compile for a good score", $isFile);
-        $warnings = $isFile && $this->getProperty("warnings");
-        $this->pass(new TestCondition($warnings), -1,
-            "Your code must compile without warnings", $isFile);
-        // Return to original name if file was renamed
-        if ($origName != "") rename($testFile, $origPathName);
-        return $base;
     }
 }
 $grader = new GradeRunner(TEST_DIR, $students);
