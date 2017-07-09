@@ -113,7 +113,7 @@ class GradeRunner extends Grader {
         // Subtotal score
         $subtotal = $this->getScore();
         $maxScore = $this->getMaxScore();
-        $this->writeGradeLog("Subtotal Score: $subtotal of $maxScore\n");
+        $this->writeGradeLog("Subtotal Score: $subtotal out of $maxScore\n");
 
         // Extra credit
         $tc = new TestPairProgClaim($this);
@@ -143,7 +143,7 @@ class GradeRunner extends Grader {
             10=>$msg,
             0=>"You are missing most parts of the assignment"
         );
-        $this->reportOverall($maxScore, false, $comments);
+        $this->reportOverall($maxScore, false, $comments, true);
         $this->writeGradeLog(OVERALL_MSG);
     }
 }
