@@ -700,8 +700,8 @@ class Grader {
         if ($showPercent) {
             $msg .= " ($percentage%)";
         }
-        if ($showMax) $msg .= " of $maxScore"; // added 10/27/15
-        $msg .= "\n.\n$overallComment\n."; // added . 9/16/13 due to Blackboar formatting
+        if ($showMax) $msg .= " out of $maxScore";
+        $msg .= "\n\n$overallComment\n";
         fwrite($this->gradeLogHandle, $msg);
         return $percentage;
     }
