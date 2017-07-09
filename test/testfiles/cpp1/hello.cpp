@@ -2,7 +2,7 @@
     CS-11 Asn 0, hello.cpp
     Purpose: Prints a message to the screen.
 
-    @author Ed Parrish
+    @author First Student
     @version 1.0 6/14/17
 */
 #include <iostream>
