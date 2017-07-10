@@ -1,4 +1,0 @@
-SELECT SupplierName,suppliers.ID,ProductName,products.ID
-FROM suppliers LEFT JOIN products
-ON suppliers.ID = products.SupplierID
-WHERE products.ID IS NULL
