@@ -1,0 +1,4 @@
+SELECT customers.customerid, customers.firstname, customers.state, items_ordered.item
+FROM customers, items_ordered
+WHERE customers.customerid = items_ordered.customerid
+ORDER BY customers.state DESC;

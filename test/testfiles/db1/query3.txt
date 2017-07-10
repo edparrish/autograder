@@ -1,0 +1,3 @@
+SELECT ProductID, PriceEach, Quantity
+FROM orderitems
+WHERE OrderID = 2
