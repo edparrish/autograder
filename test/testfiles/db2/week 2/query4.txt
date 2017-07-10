@@ -1,6 +1,0 @@
-select distinct suppliers.SupplierName, purchorders.Qty, purchorders.DateOrdered, products.ProductName
-from suppliers, products, purchorders, orderitems, orders
-where purchorders.ProductID = products.id and
-suppliers.id = products.supplierId and
-orders.ID = orderitems.OrderID
-order by suppliers.SupplierName, purchorders.DateOrdered ;
