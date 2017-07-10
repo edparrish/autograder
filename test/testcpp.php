@@ -82,7 +82,7 @@ class GradeRunner extends Grader {
         $this->fail($tc, -5, "Missing cin statement", $testFile);
 
         // 6. Evaluate and score the combined test cases.
-        if (!$testName) $testName = $fileName; // Ensure name to print
+        if (!$testName) $testName = $fileName; // Ensure some name to print
         $eval = new ValueEvaluator(10, 10, $compiles ? 1 : 0);
         $score = $this->report($eval, "Score for $testName:");
 
