@@ -1,5 +1,5 @@
 <?php
-// Test all database features
+// Test database features with example student files
 include_once("../grader.php");
 // Absolute path to student submissions
 define("TEST_DIR", ROOT_DIR.'/test/testfiles');
@@ -86,10 +86,10 @@ class GradeRunner extends Grader {
             $queryFC = new FileContents($sqlFile);
             $queryFC->trimWhitespace();
             $studentSql = $queryFC->toString();
-            $this->fail(new TestCondition($studentSql), -1,
-                "Empty query3.txt file", $sqlFile);
-            $this->run(new TestRunLogSQL($studentSql, "query5.log",
-                "artzy"), $studentSql);
+            $tc = new TestCondition($studentSql);
+            $this->fail($tc, -1, "Empty query3.txt file", $sqlFile);
+            $this->run(new TestRunLogSQL($studentSql, "query3.log",
+                "test"), $studentSql);
             $sql = "SELECT SupplierName,suppliers.ID,ProductName,products.ID
                     FROM suppliers LEFT JOIN products
                     ON suppliers.ID = products.SupplierID
