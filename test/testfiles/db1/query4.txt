@@ -1,5 +1,0 @@
-SELECT SupplierName,purchorders.Qty,DateOrdered,ProductName
-FROM suppliers, products, purchorders
-WHERE suppliers.ID=products.SupplierID
-AND products.ID=purchorders.ProductID
-ORDER BY SupplierName, DateOrdered
