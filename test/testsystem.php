@@ -7,7 +7,7 @@ define("STYLE_JAVA", ROOT_DIR."/test/style-java.xml"); // common/supplements
 define("CODELAB_TABLE", "roster");
 
 $students = null;
-$students = array("studentGood", "studentPoor");
+$students = array("studentGood"/*, "studentPoor"*/);
 
 // Put the tests here but call runTest() to run tests on all students
 class GradeRunner extends Grader {
@@ -210,9 +210,8 @@ class GradeRunner extends Grader {
             "Empty query produced no output");
         assert('$pass === false');
         // This should fail
-        echo "Error message should appear:\n";
         $pass =  $this->fail(new TestRunLogSQL("bogus sql", "bogusql.log",
-            "artzy"), -1, "Bogus query produced no output");
+            "artzy"), -1, "Bogus query failed");
         assert('$pass === false');
         // This should pass if the student did it correctly
         $studentSql = file_get_contents($this->query3File);
@@ -225,7 +224,6 @@ class GradeRunner extends Grader {
         $sql = "SELECT SupplierName, ProductName
                 FROM suppliers LEFT JOIN products
                 ON suppliers.ID = products.SupplierID;";
-        echo "Error message should appear:\n";
         $pass = $this->fail(new TestCompareSQL($sql, "bogus", "artzy"), -1,
             "Error in bogus query", $studentSql);
         assert('$pass === false');
@@ -362,7 +360,6 @@ class GradeRunner extends Grader {
         $this->removeProperty("compiles");
         assert('$this->getProperty("compiles") === NULL');
         // This should fail since there is no bogus.java
-        echo "Error message should appear:\n";
         $cmd = "javac bogus.java";
         $pass = $this->run(new TestCompileJava($cmd));
         assert('$pass === false');
