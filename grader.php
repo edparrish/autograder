@@ -15,7 +15,6 @@ require_once ROOT_DIR.'/testcase.php';
 define("ERROUT", ROOT_DIR.'/libs/errout.exe');
 define("DEFAULT_LOG", "grade.log");
 define("SUMMARY_LOG", "summary.log");
-//define("PATH", "/Courses/tools/autograde5/");
 define("DEBUG", "false"); // set true for debug statements otherwise false
 
 /**
