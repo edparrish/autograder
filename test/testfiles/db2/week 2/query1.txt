@@ -1,0 +1,3 @@
+select customers.customerid, customers.firstname, customers.lastname, items_ordered.order_date, items_ordered.item, items_ordered.price
+from items_ordered, customers
+where items_ordered.customerid = customers.customerid;

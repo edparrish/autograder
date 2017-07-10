@@ -1,0 +1,4 @@
+select products.id, products.price,orderitems.quantity
+from products, orderitems
+where products.id = orderitems.productid and
+orderitems.orderid = 2;
