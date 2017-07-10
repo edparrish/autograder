@@ -1,0 +1,3 @@
+Name: Second Student
+Assignment: A2-SQL Queries
+Date Submitted: Monday, February 10, 2014 9:04:38 AM PST
