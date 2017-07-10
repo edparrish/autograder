@@ -1,4 +1,5 @@
-SELECT customers.customerid, customers.firstname, customers.state, items_ordered.item
-FROM customers, items_ordered
-WHERE customers.customerid = items_ordered.customerid
-ORDER BY customers.state DESC;
+SELECT SupplierName,purchorders.Qty,DateOrdered,ProductName
+FROM suppliers, products, purchorders
+WHERE suppliers.ID=products.SupplierID
+AND products.ID=purchorders.ProductID
+ORDER BY SupplierName, DateOrdered

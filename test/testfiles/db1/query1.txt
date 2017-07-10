@@ -1,4 +1,3 @@
-SELECT customers.customerid, customers.firstname, customers.lastname,
-items_ordered.order_date, items_ordered.item, items_ordered.price
-FROM customers, items_ordered
-WHERE customers.customerid = items_ordered.customerid;
+SELECT ProductID, PriceEach, Quantity
+FROM orderitems
+WHERE OrderID = 2
