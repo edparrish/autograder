@@ -63,7 +63,7 @@ class TestCase {
     function run(&$testResult, $sectionName) {
         assert(is_object($testResult));
         if (get_class($testResult) !== "TestResult") {
-            die("testResult is not a TestResult".get_class($testResult));
+            die("testResult is not a TestResult:".get_class($testResult));
         }
         return $this->runTest($testResult, $sectionName);
     }
@@ -363,7 +363,12 @@ class TestCompareSQL extends TestCase {
             return false;
         }
         if ($this->sql1) {
-            $info1 = `mysql -u$dbuser -p$dbpwd -t -e"$sql1" $dbname`;
+            $info1 = `mysql -u$dbuser -p$dbpwd -t -e"$sql1" $dbname 2>&1`;
+            if (strpos($info1, 'ERROR') !== false) {  // 7/10/17
+                $msg = "Error in first compare sql: ".strtok($info1, ":");
+                $tr->add($sectionName, $this->testName, $msg, 0);
+                return false;
+            }
         }
 
         $info2 = "";
@@ -375,7 +380,12 @@ class TestCompareSQL extends TestCase {
         }
 
         if ($this->sql2) {
-            $info2 = `mysql -u$dbuser -p$dbpwd -t -e"$sql2" $dbname`;
+            $info2 = `mysql -u$dbuser -p$dbpwd -t -e"$sql2" $dbname 2>&1`;
+            if (strpos($info2, 'ERROR') !== false) {  // 7/10/17
+                $msg = "Error in second compare sql: ".strtok($info2, ":");
+                $tr->add($sectionName, $this->testName, $msg, 0);
+                return false;
+            }
         }
 
         if (strcasecmp($info1, $info2)) {
@@ -619,7 +629,8 @@ class TestCompileJava extends TestCase {
         fwrite($handle, $info."\n");
 
         if (substr_count($info, "Usage: javac") != 0) {
-            echo "Bad or incomplete compiler command: $this->cmd\n$info\n";
+            //echo "Bad or incomplete compiler command: $this->cmd\n$info\n";
+            fwrite($handle,"Bad or incomplete compiler command.\n");
         }
 
         // Collect errors and warnings
@@ -1437,19 +1448,28 @@ class TestRunLogSQL extends TestCase {
             $sql = trim($sql);
             if ($sql) {
                 require ROOT_DIR.'/includes/dbconvars.php';
-                $info = `mysql -u$dbuser -p$dbpwd -t -e"$sql" $this->dbName`;
+                //$info = `mysql -u$dbuser -p$dbpwd -t -e"$sql" $this->dbName`;
+                $info = `mysql -u$dbuser -p$dbpwd -t -e"$sql" $this->dbName 2>&1`; // 7/10/17
             }
 
             $sqlOut = wordwrap("sql: $sql\n", 75);
             fwrite($handle, "$sqlOut\n");
             if (!$info) {
                 fwrite($handle, "No output from query\n");
+                $tr->setProperty("queryok", false);  // 7/10/17
+            } else if (strpos($info, 'ERROR') !== false) {  // 7/10/17
+                $msg = "Error in SQL query: ".strtok($info, ":");
+                $tr->add($sectionName, $this->testName, $msg, 0);
+                fwrite($handle, $info);
+                $tr->setProperty("queryok", false);
             } else {
                 fwrite($handle, $info);
+                $tr->setProperty("queryok", true);  // 7/10/17
             }
         }
         fclose($handle);
-        return (bool)$info;
+        //return (bool)$info;
+        return $tr->getProperty("queryok", false);  // 7/10/17
     }
 }
 
