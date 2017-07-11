@@ -1253,6 +1253,7 @@ class TestLoadDB extends TestCase {
         }
 
         // Clean up
+        $info = preg_replace("/mysql: \[Warning\] Using a password[^\.]*\./", "", $info);
         fwrite($handle, $info);
         unlink("zdb.log"); // remove temp log
         fclose($handle) or print "Could not close file: $this->log\n";
