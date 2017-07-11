@@ -94,7 +94,7 @@ class GradeRunner extends Grader {
                     FROM suppliers LEFT JOIN products
                     ON suppliers.ID = products.SupplierID
                     WHERE products.ID IS NULL";
-            $this->fail(new TestCompareSQL($sql, $studentSql, "artzy"),
+            $this->fail(new TestCompareSQL($sql, $studentSql, "test"),
                 -1, "Error in extra credit query", $studentSql);
         }
         $this->report(new ValueEvaluator(0, 1), "Extra Credit:", true);
