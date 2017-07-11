@@ -1224,10 +1224,12 @@ class TestLoadDB extends TestCase {
         // Load the database
         if (strtoupper(substr(php_uname('s'), 0, 3)) === 'WIN') {
             $errout = ERROUT;  // errout collects info for Windows
-            $info = `$errout mysql -u$dbuser -p$dbpwd $dbname < "$file"`;
+            $cmd = "$errout mysql -u$dbuser -p$dbpwd $dbname < \"$file\"";
         } else {
-            $info = `mysql -u$dbuser -p$dbpwd $dbname < "$file" 2>&1`;
+            $info = "mysql -u$dbuser -p$dbpwd $dbname < \"$file\" 2>&1";
         }
+var_dump($cmd);
+        $info = `$cmd`;
         fwrite($handle, "Loading into database file: $file\n");
         fwrite($handle, $info);
 
