@@ -1158,7 +1158,7 @@ class TestLoadDB extends TestCase {
         @param $log The name of the log file to save errors and warnings
         reported by MySQL.
     */
-    function TestLoadDB($dbFile, $log = "DBload.log") {
+    function TestLoadDB($dbFile, $log = "dbload.log") {
         $this->testName = get_class();
         $this->dbFile = $dbFile;
         $this->log = $log;
@@ -1176,7 +1176,7 @@ class TestLoadDB extends TestCase {
         $errCount = 0;
 
         // Open log file and write header
-        if (!$handle = fopen($this->log, 'w')) die("Cannot open $this->log");
+        if (!$handle = fopen($this->log, 'w')) die("TestLoadDB open $this->log");
         fwrite($handle, "*DB Load Results*\n");
 
         // Drop all the tables from the 'test' db
@@ -1222,19 +1222,12 @@ class TestLoadDB extends TestCase {
             fclose($fh);
         }
         // Load the database
-        if (strtoupper(substr(php_uname('s'), 0, 3)) === 'WIN') {
-            $errout = ERROUT;  // errout collects info for Windows
-            $cmd = "$errout mysql -u$dbuser -p$dbpwd $dbname < \"$file\"";
-        } else {
-            $info = "mysql -u$dbuser -p$dbpwd $dbname < \"$file\" 2>&1";
-        }
-var_dump($cmd);
-        $info = `$cmd`;
         fwrite($handle, "Loading into database file: $file\n");
-        fwrite($handle, $info);
+        $cmd = "mysql -u$dbuser -p$dbpwd $dbname < \"$file\" >zdb.log 2>&1";
+        `$cmd`;
+        $info = file_get_contents("zdb.log"); // zdb.log is temp log file
 
         // Collect errors and warnings
-        // NTR: following does not catch ERROR 1045: Access denied
         $pattern = "/ERROR\s+\d+[()0-9 ]+at\s+line\s+\d+/i";
         $errors = preg_match_all($pattern, $info, $matches);
         foreach ($matches as $error) {
@@ -1260,6 +1253,8 @@ var_dump($cmd);
         }
 
         // Clean up
+        fwrite($handle, $info);
+        unlink("zdb.log"); // remove temp log
         fclose($handle) or print "Could not close file: $this->log\n";
         return $tr->getProperty("dbloaded");
     }
