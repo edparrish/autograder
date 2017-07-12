@@ -1104,9 +1104,6 @@ class TestLoadDB extends TestCase {
         }
         // Load the database
         fwrite($handle, "Loading into database file: $file\n");
-        //$cmd = "mysql -u$dbuser -p$dbpwd $dbname < \"$file\" >zdb.log 2>&1";
-        //`$cmd`;
-        //$info = file_get_contents("zdb.log"); // zdb.log is temp log file
         $info = `mysql -u$dbuser -p$dbpwd $dbname < "$file" 2>&1`;
         // Remove unwanted warning
         $info = preg_replace("/mysql: \[Warning\] Using a password[^\.]*\./", "", $info);
@@ -1135,7 +1132,6 @@ class TestLoadDB extends TestCase {
         }
         // Clean up
         fwrite($handle, $info);
-//        unlink("zdb.log"); // remove temp log
         fclose($handle) or print "Could not close file: $this->log\n";
         return $tr->getProperty("dbloaded");
     }
@@ -1309,6 +1305,7 @@ class TestRunLogSQL extends TestCase {
                 // -t is table format, -e is execute
                 $info = `mysql -u$dbuser -p$dbpwd -t -e"$sql" $dbname 2>&1`;
             }
+            // Remove unwanted warning
             $info = preg_replace("/mysql: \[Warning\] Using a password[^\.]*\./", "", $info);
             $sqlOut = wordwrap("sql: $sql\n", 75);
             fwrite($handle, "$sqlOut\n");
