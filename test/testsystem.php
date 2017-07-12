@@ -241,6 +241,7 @@ class GradeRunner extends Grader {
     function testCodeLab() {
         $this->setSectionName("testCodeLab");
         echo "...testing TestCodeLab\n";
+        flush();
         $firstName = $this->getFirstName();
         $lastName = $this->getLastName();
         $this->run(new TestCodeLab(CODELAB_TABLE, $lastName, $firstName));
