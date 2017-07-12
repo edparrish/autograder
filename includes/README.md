@@ -1,1 +1,1 @@
-This folder has orginal included files.
+This folder has first party included files.
