@@ -1,12 +1,10 @@
 <?php
 /**
     All the test cases as TestCase and subclasses of TestCase.
-
     @author Edward Parrish
     @version 1.0 07/15/04
     @version 1.4 05/15/16
     @version 1.5 06/19/17
-
 Index to all test cases:
 TestCase: Superclass of all tests.
 TestCodeLab($tableName, $lastName, $firstName)
@@ -32,30 +30,25 @@ TestStylePHP($globList = "*.php", $log = "style.log")--minimal
 TestValidateHTML($globList="*.html", $log="validate.log")--old
 Note: Parameter lists ordered to allow those with default values at end.
 *=recently updated
-
 TestCase ideas:
 Separate by language type and common
 TestCompareFilesLevenshtein
 TestCompareFilesSimilarText: O(n^3)
 TestDiff: returns % same? array_diff
 */
-
 require_once 'ag-config.php';
 require_once 'filecontents.php';
 require_once ROOT_DIR.'/includes/util.php';
 // see defines near each test case
-
 /**
  * Superclass for all test-case classes.
  * Provides a common interface for the grader.
  */
 class TestCase {
     var $testName = "TestCase";
-
     /**
         Call to run the test and collect results. Adds TestResult objects
         to the $testResultList.
-
         @param $testResult The container for storing test results.
         @param $sectionName The name of the section.
         @return true if the test passes, otherwise returns false.
@@ -67,11 +60,9 @@ class TestCase {
         }
         return $this->runTest($testResult, $sectionName);
     }
-
     /**
         Runs the actual test case and save test results.
         Implement the test in this function but call with function run().
-
         @param $tr The container for storing test results.
         @param $sectionName The section name for each TestResult.
         @return true if the test passes, otherwise returns false.
@@ -80,19 +71,15 @@ class TestCase {
         echo "Override runTest() in subclasses";
         return false;
     }
-
     /**
         Return the name of the test.
-
         @param $newName The name of the test.
      */
     function getTestName() {
         return $this->testName;
     }
-
     /**
         Change the name of the test.
-
         @param $newName The name of the test.
      */
     function setTestName($newName) {
@@ -101,10 +88,8 @@ class TestCase {
         }
         $this->testName = $newName;
     }
-
     /**
         Delete (unlink) all files listed in the $fileList.
-
         @param $fileList The file list to delete.
         NTR: A Util function?
      */
@@ -114,8 +99,6 @@ class TestCase {
         }
     }
 }
-
-
 /**
     Tests CodeLab exercise completions based on a roster previously
     loaded into the database.
@@ -124,10 +107,8 @@ class TestCodeLab extends TestCase {
     var $tableName;
     var $lastName;
     var $firstName;
-
     /**
         Constructor with parameters for the test.
-
         @param $tableName Database table containing the exported data.
         @param $lastName Student's last name.
         @param $firstName Student's first name.
@@ -140,11 +121,9 @@ class TestCodeLab extends TestCase {
         if (trim($firstName) === "") echo "TestCodeLab: No firstName\n";
         $this->firstName = $firstName;
     }
-
     /**
         Queries the database of CodeLab exercise completions for an
         individual student.
-
         @param $tr The container for storing test results.
         @param $sectionName The section name for each TestResult.
         @return true if the student has any CodeLab records, otherwise
@@ -155,7 +134,6 @@ class TestCodeLab extends TestCase {
         $tableName = $this->tableName;
         $firstName = $this->firstName;
         $lastName = $this->lastName;
-
         // Most specific query
         $sql = "
             SELECT * FROM $tableName
@@ -172,14 +150,12 @@ class TestCodeLab extends TestCase {
                 ";
             $result = $db->query($sql);
         }
-
         // Missing data
         $missingCodeLab = 0;
         if (mysql_num_rows($result) === 0) {
             echo "TestCodeLab: could not find student data\n";
             $missingCodeLab = 1;
         }
-
         // Need human intervention
         if (mysql_num_rows($result) > 1) {
             echo "\nTestCodeLab: more than 1 row found in $tableName\n";
@@ -190,7 +166,6 @@ class TestCodeLab extends TestCase {
             }
             die("Stopping so you can fix the problem in TestCodeLab\n");
         }
-
         $totalProblems = 0;
         $correctOnTime = 0;
         $correctLate = 0;
@@ -230,12 +205,9 @@ class TestCodeLab extends TestCase {
         $tr->setProperty("correctLate", $correctLate);
         $tr->setProperty("incorrect", $incorrect);
         $tr->setProperty("missingCodeLab", $missingCodeLab);
-
         return !$missingCodeLab;
     }
 }
-
-
 /**
     Compares two files line by line. Use FileContents methods to trim whitespace and filter text before comparison as needed.
     Returns true if all lines match exactly, otherwise returns false.
@@ -244,10 +216,8 @@ class TestCompareFiles extends TestCase {
     private $file1;
     private $file2;
     private $ignoreCase;
-
     /**
         Constructor with parameters for the test.
-
         @param $file1 First file to compare.
         @param $file2 Second file to compare.
         @param $ignoreCase true for case-insensitive comparison. (strcasecmp)
@@ -268,10 +238,8 @@ class TestCompareFiles extends TestCase {
         }
         $this->ignoreCase = $ignoreCase;
     }
-
     /**
         Runs the actual test and returns results in a TestResult.
-
         @param $tr The container for storing test results.
         @param $sectionName The section name for each TestResult.
         @return true if all lines match, otherwise returns false.
@@ -319,8 +287,6 @@ class TestCompareFiles extends TestCase {
         return true;
     }
 }
-
-
 /**
     Tests if the output of two SQL statements match.
 */
@@ -328,31 +294,28 @@ class TestCompareSQL extends TestCase {
     var $dbName;
     var $sql1;
     var $sql2;
-
     /**
         Constructor with parameters for the test.
-
         @param $sql1 One SQL statement to compare.
         @param $sql2 Another SQL statement to compare.
         @param $dbName The database on which to run both SQL statements.
     */
-    function TestCompareSQL($sql1, $sql2, $dbName = "test") {
+    function TestCompareSQL($sql1, $sql2, $dbName = NULL) {
         $this->testName = get_class();
         $this->sql1 = $sql1;
         $this->sql2 = $sql2;
         $this->dbName = $dbName;
     }
-
     /**
         Tests if the output of two SQL statements match.
-
         @param $tr The container for storing test results.
         @param $sectionName The section name for each TestResult.
         @return true if both outputs match, otherwise returns false.
      */
     function runTest(&$tr, $sectionName) {
         require ROOT_DIR.'/includes/dbconvars.php';
-        $dbname = $this->dbName; // overwrite the dbconvars value
+        //$dbname = $this->dbName; // overwrite the dbconvars value
+        if ($this->dbName) $dbname = $this->dbName; // replace dbconvars
         if (!$this->sql1) die("sql1 not specifed\n");
         if (!$this->sql2) die("sql2 not specifed\n");
         $info1 = "";
@@ -363,14 +326,14 @@ class TestCompareSQL extends TestCase {
             return false;
         }
         if ($this->sql1) {
-            $info1 = `mysql -u$dbuser -p$dbpwd -t -e"$sql1" $dbname 2>&1`;
+            $cmd = "mysql -u$dbuser -p$dbpwd -t -e\"$sql1\" $dbname 2>&1";
+            $info1 = `$cmd`;
             if (strpos($info1, 'ERROR') !== false) {  // 7/10/17
                 $msg = "Error in first compare sql: ".strtok($info1, ":");
                 $tr->add($sectionName, $this->testName, $msg, 0);
                 return false;
             }
         }
-
         $info2 = "";
         $sql2 = preg_replace("/\s+/", " ", $this->sql2);
         if (preg_match("/DROP|CREATE|INSERT|ALTER|UPDATE|DELETE/i", $sql2)) {
@@ -378,7 +341,6 @@ class TestCompareSQL extends TestCase {
             $tr->add($sectionName, $this->testName, $msg, 0);
             return false;
         }
-
         if ($this->sql2) {
             $info2 = `mysql -u$dbuser -p$dbpwd -t -e"$sql2" $dbname 2>&1`;
             if (strpos($info2, 'ERROR') !== false) {  // 7/10/17
@@ -387,13 +349,11 @@ class TestCompareSQL extends TestCase {
                 return false;
             }
         }
-
         if (strcasecmp($info1, $info2)) {
             return false;
         }
         return true;
     }
-
     /**
      * Normalizes output lines before comparison.
      *
@@ -412,10 +372,7 @@ class TestCompareSQL extends TestCase {
         }
         return $result;
     }
-
 }
-
-
 /**
     Compiles C++ programs using a specified command string and records
     errors and warnings in the list of TestResults. Records if the compile
@@ -427,10 +384,8 @@ class TestCompileCPP extends TestCase {
     private $log;
     private $msg;
     private $pathName;
-
     /**
         Constructor with parameters for the test.
-
         @param $pathName The path and name of the file to compile.
         @param $cmd The command string to execute, overridding the default. Use this parameter to invoke makefiles as well.
      */
@@ -445,11 +400,9 @@ class TestCompileCPP extends TestCase {
         $this->log = "compile$base.log";
         $this->msg = "Compiling $base.cpp";
     }
-
     /**
         Compiles C++ file using a default command or the one specified in the
         constructor.
-
         @param $tr The container for storing test results.
         @param $sectionName The section name for each TestResult.
         @return true if the code compiles, otherwise returns false.
@@ -556,15 +509,12 @@ class TestCompileCPP extends TestCase {
         return $tr->getProperty("compiles"); // If it compiles, it passed.
     }
 }
-
-
 /**
     Compiles Java programs using a specified command string and records
     errors and warnings in the list of TestResults. Also records if the
     compile command succeeded as the property "compiles". In addition,
     records the number of warnings the compiler reported as as the property
     "warnings".
-
     NTR: Need to allow passing a list of files to compile.
  */
 class TestCompileJava extends TestCase {
@@ -572,10 +522,8 @@ class TestCompileJava extends TestCase {
     var $log;
     var $msg;
     var $clean;
-
     /**
         Constructor with parameters for the test.
-
         @param $cmd The command string to execute.
         @param $log The file in which to save the compiler results.
         @param $msg A message to write at the beginning of the log file.
@@ -591,17 +539,14 @@ class TestCompileJava extends TestCase {
         $this->msg = $msg;
         $this->clean = $clean;
     }
-
     /**
         Compiles Java programs using the command specified in the constructor.
-
         @param $tr The container for storing test results.
         @param $sectionName The section name for each TestResult.
         @return true if the code compiles, otherwise returns false.
      */
     function runTest(&$tr, $sectionName) {
         $logExists = file_exists("compile.log");
-
         // Open log file and write header
         if (!$handle = fopen($this->log, 'ab')) {
             die("Cannot open $this->log");
@@ -611,12 +556,10 @@ class TestCompileJava extends TestCase {
         } else if (!$logExists) {
             fwrite($handle, "*javac Output\n");
         }
-
         // Remove old files in case student submitted compiled files
         if ($this->clean) {
             $this->_deleteFiles(glob("*.class"));
         }
-
         // Compile files
         fwrite($handle, "Command: $this->cmd\n");
         if (strtoupper(substr(php_uname('s'), 0, 3)) === 'WIN') {
@@ -627,12 +570,10 @@ class TestCompileJava extends TestCase {
         }
         $info = trim($info);
         fwrite($handle, $info."\n");
-
         if (substr_count($info, "Usage: javac") != 0) {
             //echo "Bad or incomplete compiler command: $this->cmd\n$info\n";
             fwrite($handle,"Bad or incomplete compiler command.\n");
         }
-
         // Collect errors and warnings
         preg_match("/(\d+)\s+error/", $info, $matches);
         $errors = 0;
@@ -668,8 +609,6 @@ class TestCompileJava extends TestCase {
         return $tr->getProperty("compiles"); // If it compiles, it passed.
     }
 }
-
-
 /**
     Adds a message if the $condition evaluates to true and the message
     or value is not empty or 0 respectively.
@@ -678,10 +617,8 @@ class TestCondition extends TestCase {
     private $condition;
     private $msg;
     private $value;
-
     /**
         Constructor with parameters for the test.
-
         @param $condition A value of true or false.
         @param $msg The message to add when the condition is true.
         @param $value The value to add when the condition is true.
@@ -693,10 +630,8 @@ class TestCondition extends TestCase {
         $this->msg = $msg;
         $this->value = $value;
     }
-
     /**
         Implements the test case functionality and logic.
-
         @param $testResult The container for storing test results.
         @param $sectionName The section name for each TestResult.
         @return the initial condition.
@@ -709,18 +644,14 @@ class TestCondition extends TestCase {
         return $this->condition;
     }
 }
-
-
 /**
     Tests for claims of extra credit.
  */
 class TestExtraCreditClaim extends TestCase {
     var $grader;
     var $value;
-
     /**
         Constructor with parameters for the test.
-
         @param $grader The Grader object.
      */
     function TestExtraCreditClaim(&$grader) {
@@ -729,10 +660,8 @@ class TestExtraCreditClaim extends TestCase {
         $this->grader = $grader;
         $this->value = $value;
     }
-
     /**
         Tests if extra credit was claimed in the README.txt file.
-
         @param $tr The container for storing test results.
         @param $sectionName The section name for each TestResult.
         @return true if extra credit was claimed in the README.txt file,
@@ -743,8 +672,6 @@ class TestExtraCreditClaim extends TestCase {
         return $readme->getExtraCreditClaim();
     }
 }
-
-
 /**
     Checks whether files specified by list of $globs exist. Returns true
     if the any of the globs exist and false if none of them were found.
@@ -754,10 +681,8 @@ class TestFileExists extends TestCase {
     var $globList;
     var $rec;
     var $startDir;
-
     /**
         Constructor with parameters for the test.
-
         @param $globList The list of file patterns to search.
         @param $rec Set true to recursively descend from $startDir.
         @param $startDir The starting directory.
@@ -771,11 +696,9 @@ class TestFileExists extends TestCase {
         $this->rec= $rec;
         $this->startDir = $startDir;
     }
-
     /**
         Records an error if no file name in the directory or any
         subdirectory matches the $glob pattern.
-
         @param $tr The container for storing test results.
         @param $sectionName The section name for each TestResult.
         @return true if the file exists, otherwise returns false.
@@ -799,18 +722,14 @@ class TestFileExists extends TestCase {
         return true;
     }
 }
-
-
 /**
     Tests if all of a list of patterns exists in every file meeting $glob.
  */
 class TestMatch extends TestCase {
     var $patList;
     var $fileList;
-
     /**
         Constructor with parameters for the test.
-
         @param $patList A list of regular expressions to match.
         @param $fileList The list of FileContent to search.
      */
@@ -829,10 +748,8 @@ class TestMatch extends TestCase {
         }
         $this->fileList = FileContents::toFileContents($fileList);
     }
-
     /**
         Tests if all of a list of patterns exists in every file of the $fileList.
-
         @param $tr The container for storing test results.
         @param $sectionName The section name for each TestResult.
         @return true if all the patterns are found in any file, otherwise returns false.
@@ -861,18 +778,14 @@ class TestMatch extends TestCase {
         return true;
     }
 }
-
-
 /**
     Tests if any of a list of patterns exists in any file meeting $glob.
  */
 class TestMatchAny extends TestCase {
     var $fileList;
     var $patList;
-
     /**
         Constructor with parameters for the test.
-
         @param $patList A list of regular expressions to match.
         @param $fileList The list of file globs or FileContents to search.
      */
@@ -891,12 +804,10 @@ class TestMatchAny extends TestCase {
         }
         $this->fileList = FileContents::toFileContents($fileList);
     }
-
     /**
         Tests if any of a list of patterns exists in every file.
         If no $pattern matches in any file, adds a TestResult with the
         $msg and $value.
-
         @param $tr The container for storing test results.
         @param $sectionName The section name for each TestResult.
         @return true if any pattern is found in any file, otherwise returns false.
@@ -925,8 +836,6 @@ class TestMatchAny extends TestCase {
         return false; // No match found
     }
 }
-
-
 /**
     Counts how many of the patterns exists in any file meeting $fileList.
     Adds a TestResult with the $msg and $value if the count is less than
@@ -938,10 +847,8 @@ class TestMatchCount extends TestCase {
     var $min;
     var $max;
     //var $value;
-
     /**
         Constructor with parameters for the test.
-
         @param $patList A list of regular expressions to match.
         @param $fileList The list of file patterns to search.
         @param $min The minimum count to not cause an error.
@@ -964,12 +871,10 @@ class TestMatchCount extends TestCase {
         $this->min = $min;
         $this->max = $max;
     }
-
     /**
         Counts how many of the patterns exists in any file meeting $fileList.
         Adds a TestResult with the $msg and $value if the count is less than
         $min or greater than $max.
-
         @param $tr The container for storing test results.
         @param $sectionName The section name for each TestResult.
         @return true if any pattern is found in any file, otherwise returns false.
@@ -1003,8 +908,6 @@ class TestMatchCount extends TestCase {
         return true;
     }
 }
-
-
 /**
     Compiles and runs a Java unit test, recording any test errors reported
     by the test code.
@@ -1018,10 +921,8 @@ class TestJavaUnit extends TestCase {
     var $value;
     var $clean;
     var $testDir;
-
     /**
         Constructor with parameters for the test.
-
         @param $testFile The test file to compile and run.
         @param $value The points for each error.
         @param $logFile The file in which to save the output.
@@ -1037,17 +938,14 @@ class TestJavaUnit extends TestCase {
         $this->clean = $clean;
         $this->testDir = $testDir;
     }
-
     /**
         Compiles and runs Java unit tests, recording any test errors reported
         by the test code.
-
         @param $tr The container for storing test results.
         @param $sectionName The section name for each TestResult.
         @return true if no errors are detected, otherwise returns false
     */
     function runTest(&$tr, $sectionName) {
-
         // Copy test file into current directory
         $testName = basename($this->testFile);
         $baseTestName = basename($testName, ".java");
@@ -1055,18 +953,15 @@ class TestJavaUnit extends TestCase {
             copy($this->testFile, "$this->testDir/$testName")
                 or die("Could not copy file: $this->testFile\n");
         }
-
         // Remove old files in case student submitted compiled files
         if ($this->clean) {
             $this->_deleteFiles(glob("*.class"));
         }
-
         // Open log file and write header
         if (!$handle = fopen($this->outFile, 'a')) {
             die("Cannot open $testName");
         }
         fwrite($handle, "*Unit Test Results: $testName\n");
-
         // Compile with unit test in place
         $cp = $this->testDir != "." ? "-cp $this->testDir " : "";
         $compileCmd = "javac $cp$this->testDir/$baseTestName.java";
@@ -1092,7 +987,6 @@ class TestJavaUnit extends TestCase {
             $tr->setProperty("testRuns", false); // NTR: too limited
             return false; // failed to run in any way
         }
-
         // Run unit tests and record any errors
         $fileName = basename($testName, ".java");
         $runCmd = "java $cp$fileName";
@@ -1122,7 +1016,6 @@ class TestJavaUnit extends TestCase {
                 }
             }
             $errList = array_count_values($errors);
-
             // Save summary in TestResult
             foreach ($errList as $err=>$count) {
                 $msg = $err;
@@ -1132,7 +1025,6 @@ class TestJavaUnit extends TestCase {
             $count = count($errList);
             fwrite($handle, "\nTotal test errors: $count\n\n");
         }
-
         // Clean up
         fclose($handle);
         if (file_exists("$baseTestName.class")) unlink("$baseTestName.class");
@@ -1140,8 +1032,6 @@ class TestJavaUnit extends TestCase {
         return true;
     }
 }
-
-
 /**
     Loads a MySQL database from a single file and records errors and warnings
     in the test result list.
@@ -1150,10 +1040,8 @@ class TestJavaUnit extends TestCase {
 class TestLoadDB extends TestCase {
     var $dbFile;
     var $log;
-
     /**
         Constructor with parameters for the test.
-
         @param $dbFile The name of the database file to load.
         @param $log The name of the log file to save errors and warnings
         reported by MySQL.
@@ -1163,10 +1051,8 @@ class TestLoadDB extends TestCase {
         $this->dbFile = $dbFile;
         $this->log = $log;
     }
-
     /**
         Loads a MySQL database and records errors and warnings in $tr.
-
         @param $tr The container for storing test results.
         @param $sectionName The section name for each TestResult.
         @return true if the database loaded without errors. Warnings will not
@@ -1174,11 +1060,9 @@ class TestLoadDB extends TestCase {
      */
     function runTest(&$tr, $sectionName) {
         $errCount = 0;
-
         // Open log file and write header
         if (!$handle = fopen($this->log, 'w')) die("TestLoadDB open $this->log");
         fwrite($handle, "*DB Load Results*\n");
-
         // Drop all the tables from the 'test' db
         require ROOT_DIR.'/includes/dbconvars.php';
         $dbCnx = mysql_connect($dbhost, $dbuser, $dbpwd)
@@ -1191,7 +1075,6 @@ class TestLoadDB extends TestCase {
             mysql_query("DROP TABLE $table");
         }
         mysql_free_result($result);
-
         $file = $this->dbFile;
         if (!$file) {
             $msg = "No SQL files to load";
@@ -1208,7 +1091,6 @@ class TestLoadDB extends TestCase {
             fclose($handle) or print "Could not close file: $this->log\n";
             return false;
         }
-
         // Comment out all USE dbname; statements
         $contents = file_get_contents($file);
         $pattern = "/USE\s+\w+\s*\;/i";
@@ -1226,7 +1108,6 @@ class TestLoadDB extends TestCase {
         $cmd = "mysql -u$dbuser -p$dbpwd $dbname < \"$file\" >zdb.log 2>&1";
         `$cmd`;
         $info = file_get_contents("zdb.log"); // zdb.log is temp log file
-
         // Collect errors and warnings
         $pattern = "/ERROR\s+\d+[()0-9 ]+at\s+line\s+\d+/i";
         $errors = preg_match_all($pattern, $info, $matches);
@@ -1236,7 +1117,6 @@ class TestLoadDB extends TestCase {
                 $errCount++;
             }
         }
-
         $result = mysql_query("SHOW TABLES FROM $dbname");
         $numTables = mysql_num_rows($result);
         if ($numTables == 0) {
@@ -1251,7 +1131,6 @@ class TestLoadDB extends TestCase {
             fwrite($handle, "No errors during database load\n");
             $tr->setProperty("dbloaded", true);
         }
-
         // Clean up
         $info = preg_replace("/mysql: \[Warning\] Using a password[^\.]*\./", "", $info);
         fwrite($handle, $info);
@@ -1260,17 +1139,13 @@ class TestLoadDB extends TestCase {
         return $tr->getProperty("dbloaded");
     }
 }
-
-
 /**
     Tests for claims of extra credit.
  */
 class TestPairProgClaim extends TestCase {
     var $grader;
-
     /**
         Constructor with parameters for the test.
-
         @param $grader The Grader object.
      */
     function TestPairProgClaim(&$grader) {
@@ -1278,10 +1153,8 @@ class TestPairProgClaim extends TestCase {
         $this->testName = get_class();
         $this->grader = &$grader;
     }
-
     /**
         Tests if pair programming was claimed in the README.txt file.
-
         @param $tr The container for storing test results.
         @param $sectionName The section name for each TestResult.
         @return true if pair programming was claimed in the README.txt file,
@@ -1292,18 +1165,14 @@ class TestPairProgClaim extends TestCase {
         return $readme->getPairProgClaim();
     }
 }
-
-
 /**
     Tests for errors in the README.txt file.
  */
 class TestReadme extends TestCase {
     var $grader;
     var $points;
-
     /**
         Constructor with parameters for the test.
-
         @param $grader The Grader object. Use of the grader object is deprecated?
      */
     function TestReadme($grader, $pts=2) {
@@ -1312,10 +1181,8 @@ class TestReadme extends TestCase {
         $this->grader = $grader;
         $this->points = $pts;
     }
-
     /**
         Checks for errors in the README.txt file.
-
         @param $tr The container for storing test results.
         @param $sectionName The section name for each TestResult.
         @return true if no errors are detected, otherwise returns false.
@@ -1332,7 +1199,6 @@ class TestReadme extends TestCase {
         if (isset($pathInfo["extension"])) {
             $ext = strtolower(trim($pathInfo["extension"]));
         }
-
         if (!$readme->isReadme()) {
             $msg = "README.txt file not submitted";
             $tr->add($sectionName, $this->testName, $msg, -$pts);
@@ -1340,7 +1206,6 @@ class TestReadme extends TestCase {
             return false;
         }
         $tr->setProperty("ReadmeExists", true);
-
         $errorFree = true; // assume correct to start
         if (strtoupper(substr($base, 0, 6)) != "README") {
             $name = pathinfo($base, PATHINFO_FILENAME); // added 2/3/2017
@@ -1389,8 +1254,6 @@ class TestReadme extends TestCase {
         return $errorFree;
     }
 }
-
-
 /**
     Runs the SQL statement against the specified database using mysql
     monitor and and saves the results in an output file.
@@ -1399,15 +1262,13 @@ class TestRunLogSQL extends TestCase {
     var $dbName;
     var $sqlList;
     var $outFile;
-
     /**
         Constructor with parameters for the test.
-
         @param $sql The list of SQL commands to run.
         @param $outFile The file in which to save the output.
         @param $dbName The database on which to run the SQL.
     */
-    function TestRunLogSQL($sql, $outFile = "out.log", $dbName = "test") {
+    function TestRunLogSQL($sql, $outFile = "out.log", $dbName = NULL) {
         $this->testName = get_class();
         if (!is_array($sql)) {
             $sql = array($sql);
@@ -1416,16 +1277,16 @@ class TestRunLogSQL extends TestCase {
         $this->dbName = $dbName;
         $this->outFile = $outFile;
     }
-
     /**
         Runs the SQL statement against the specified database using mysql
         monitor and and saves the results in an output file.
-
         @param $tr The container for storing test results.
         @param $sectionName The section name for each TestResult.
         @return true if $sql produced an output, otherwise false.
      */
     function runTest(&$tr, $sectionName) {
+        require ROOT_DIR.'/includes/dbconvars.php';
+        if ($this->dbName) $dbname = $this->dbName; // overwrite dbconvars
         if (!$handle = fopen($this->outFile, "ab")) {
             die("Cannot open $this->outFile");
         }
@@ -1437,7 +1298,6 @@ class TestRunLogSQL extends TestCase {
             fclose($handle);
             return false;
         }
-
         $info = "No SQL statement found";
         foreach($this->sqlList as $sql) {
             $sql = preg_replace("/\#.*\n/", "", $sql); // remove # comments
@@ -1445,11 +1305,8 @@ class TestRunLogSQL extends TestCase {
             $sql = preg_replace("/\s+/", " ", $sql); // remove extra whitespace
             $sql = trim($sql);
             if ($sql) {
-                require ROOT_DIR.'/includes/dbconvars.php';
-                //$info = `mysql -u$dbuser -p$dbpwd -t -e"$sql" $this->dbName`;
-                $info = `mysql -u$dbuser -p$dbpwd -t -e"$sql" $this->dbName 2>&1`; // 7/10/17
+                $info = `mysql -u$dbuser -p$dbpwd -t -e"$sql" $dbname 2>&1`; // 7/11/17
             }
-
             $sqlOut = wordwrap("sql: $sql\n", 75);
             fwrite($handle, "$sqlOut\n");
             if (!$info) {
@@ -1470,8 +1327,6 @@ class TestRunLogSQL extends TestCase {
         return $tr->getProperty("queryok", false);  // 7/10/17
     }
 }
-
-
 /**
     Runs a PHP web page and save the results as HTML in $outFileName.
  */
@@ -1479,10 +1334,8 @@ class TestRunPage extends TestCase {
     var $pageName;
     var $outFile;
     var $logFile;
-
     /**
         Constructor with parameters for the test.
-
         @param $pageName The name of the page to run.
         @param $outFile The name of the file to save the HTML output.
         @param $logFile The file in which to save the errors and warnings.
@@ -1493,10 +1346,8 @@ class TestRunPage extends TestCase {
         $this->outFile = $outFile;
         $this->logFile = $logFile;
     }
-
     /**
         Runs a PHP web page and save the results as HTML in $outFile.
-
         @param $tr The container for storing test results.
         @param $sectionName The section name for each TestResult.
         @return true if no errors were found, otherwise returns false.
@@ -1511,7 +1362,6 @@ class TestRunPage extends TestCase {
             return false;
         }
         $tr->setProperty("runs", true);
-
         // Compose the URL
         $url = "http://localhost/";
         $url .= substr(strtr(getcwd(), "\\", "/"), 11); // 11 is a hack
@@ -1520,7 +1370,6 @@ class TestRunPage extends TestCase {
         $url = str_replace('%2F', '/', $url); // fix urlencode
         $url = str_replace('%3A', ':', $url); // fix urlencode
         $url = str_replace('+', '%20', $url); // fix urlencode
-
         // Run the page from a server and save in a file
         $info = file_get_contents($url);
         if (!$info) {
@@ -1575,7 +1424,6 @@ class TestRunPage extends TestCase {
         }
         return count($errors) === 0;
     }
-
     /**
      * Adds an array of $matches to $testResult
      */
@@ -1585,8 +1433,6 @@ class TestRunPage extends TestCase {
         }
     }
 }
-
-
 /**
     Checks C++ code for programming style. Which items to test are controlled
     by a configuration properties file or list.
@@ -1601,10 +1447,8 @@ class TestStyleCPP extends TestCase {
     private $hasFileCommentBlockError;
     private $varNameList; // store example issues for variable names
     private $constNameList; // store example issues for const names
-
     /**
         Constructor with parameters controlling the test.
-
         @param $fileList A list of FileContents to test.
         @param $config A configuration properties list or file name.
         @param $summarize Set true to save a summary in TestResult.
@@ -1636,11 +1480,9 @@ class TestStyleCPP extends TestCase {
         $this->logFile = $logFile;
         $this->hasFileCommentBlockError = false;
     }
-
     /**
         Checks code for style in one or more files. Detected errors are
         written to a log and a summary saved in the TestResult.
-
         @param $tr The container for storing test results.
         @param $sectionName The section name for each TestResult.
         @return true if the test passes, otherwise returns false.
@@ -1702,7 +1544,6 @@ class TestStyleCPP extends TestCase {
             }
         }
         //print_r($this->errors); // for debugging
-
         // Save errors in log file
         if ($this->logFile) {
             if (!$handle = fopen($this->logFile, "w")) die("Cannot open $testName");
@@ -1718,7 +1559,6 @@ class TestStyleCPP extends TestCase {
             }
             fclose($handle);
         }
-
         // Summarize error messages
         if ($this->summarize) {
             $errorList = array();
@@ -1770,7 +1610,6 @@ class TestStyleCPP extends TestCase {
                 unset($errList[$oldKey]);
                 $pointVal[$newKey] = $pointVal[$oldKey];
             }
-
             // Save summary in TestResult
             $errorCount = 0;
             foreach ($errList as $err=>$count) {
@@ -1800,10 +1639,8 @@ class TestStyleCPP extends TestCase {
         }
         return count($this->errors) === 0;
     }
-
     /**
         Add an error message to the list.
-
         @param $msg The message to add.
         @param $points The point value of the error.
      */
@@ -1811,10 +1648,8 @@ class TestStyleCPP extends TestCase {
         $data = array($msg, $points);
         $this->errors[] = $data;
     }
-
     /**
         Returns the value for the specified key.
-
         @param $key The key for the value to retrieve.
         @return The value or null if the key does not exist.
      */
@@ -1824,12 +1659,9 @@ class TestStyleCPP extends TestCase {
         }
         return "skip";
     }
-
     /**
         Strips C and C++ style comments AND strings from $lines.
-
         Retains same number of lines for determining line numbers.
-
         @param $lines An array containing all the lines in the file.
         @return The same file with comments and strings removed.
      */
@@ -1861,10 +1693,8 @@ class TestStyleCPP extends TestCase {
         }
         return $StrippedLines;
     }
-
     /**
         Checks for @version tag errors.
-
         @param $lines An array containing all the lines in the file.
         @param $file The name of the file.
      */
@@ -1887,10 +1717,8 @@ class TestStyleCPP extends TestCase {
         }
         $this->addError("$file: Missing @author tag", $value);
     }
-
     /**
         Checks file comment block is present.
-
         @param $lines An array containing all the lines in the file.
         @param $file The name of the file.
      */
@@ -1951,13 +1779,10 @@ class TestStyleCPP extends TestCase {
         }
         $this->addError("$file: Missing or incorrect file comment block", $value);
         $this->hasFileCommentBlockError = true;
-
         return false;
     }
-
     /**
         Checks file for presence of tab characters.
-
         @param $lines An array containing all the lines in the file.
         @param $file The name of the file.
      */
@@ -1972,10 +1797,8 @@ class TestStyleCPP extends TestCase {
             }
         }
     }
-
     /**
         Checks the comment block of a function.
-
         @param $lines An array containing all the lines in the file.
         @param $file The name of the file.
      */
@@ -2046,10 +1869,8 @@ print_r(array_values($funDefn));
 print_r($funNames);
 */
     }
-
     /**
         Checks code file for indentation of lines inside curly braces.
-
         @param $lines An array containing all the lines in the file.
         @param $file The name of the file (for messages).
      */
@@ -2074,10 +1895,8 @@ print_r($funNames);
             $level -= substr_count($line, '}');
         }
     }
-
     /**
         Checks for long lines.
-
         @param $lines An array containing all the lines in the file.
         @param $file The name of the file.
      */
@@ -2093,12 +1912,10 @@ print_r($funNames);
             }
         }
     }
-
     /**
         Checks that there are no "magic numbers", where a magic number is a
         numeric literal that is not defined as a constant. The numbers
         -1, 0, 1, and 2 are not considered to be magic numbers.
-
         @param $strippedLines An array containing all the lines in the file
             but without any comments or strings.
         @param $file The name of the file.
@@ -2138,10 +1955,8 @@ print_r($funNames);
             }
         }
     }
-
     /**
         Checks class naming conventions.
-
         @param $strippedContents A string containing all the lines in the
             file but without any comments or literal strings.
         @param $file The name of the file.
@@ -2160,10 +1975,8 @@ print_r($funNames);
             }
         }
     }
-
     /**
         Checks function naming conventions.
-
         @param $strippedContents A string containing all the lines in the
             file but without any comments or literal strings.
         @param $file The name of the file.
@@ -2186,10 +1999,8 @@ print_r($funNames);
             }
         }
     }
-
     /**
         Checks constant variable naming conventions.
-
         @param $strippedContents A string containing all the lines in the
             file but without any comments or literal strings.
         @param $file The name of the file.
@@ -2236,10 +2047,8 @@ print_r($funNames);
             }
         }
     }
-
     /**
         Checks variable naming conventions.
-
         @param $strippedContents A string containing all the lines in the
             file but without any comments or literal strings.
         @param $file The name of the file.
@@ -2294,10 +2103,8 @@ print_r($funNames);
             }
         }
     }
-
     /**
         Checks for @version tag errors.
-
         @param $lines An array containing all the lines in the file.
         @param $file The name of the file.
      */
@@ -2320,10 +2127,8 @@ print_r($funNames);
         }
         $this->addError("$file: Missing @version tag", $value);
     }
-
     /**
         Checks that a comma is followed by whitespace.
-
         @param $strippedLines An array containing all the lines in the file
             but without any comments or strings.
         @param $file The name of the file.
@@ -2338,10 +2143,8 @@ print_r($funNames);
             }
         }
     }
-
     /**
         Checks that a comma is followed by whitespace.
-
         @param $strippedLines An array containing all the lines in the file
             but without any comments or strings.
         @param $file The name of the file.
@@ -2359,7 +2162,6 @@ print_r($funNames);
         }
     }
 }
-
 // Uncomment the following to run unit tests
 //unitTestStyleCPP();
 function unitTestStyleCPP() {
@@ -2371,30 +2173,23 @@ function unitTestStyleCPP() {
     $p->load(file_get_contents($configPath));
     $config = $p->toArray();
     $result = new TestResult();
-
     $t = new TestStyleCPP($cppFiles, $config, true, "testfiles/style.log");
     $pass = $t->run($result, "UnitTestStyleCPP");
-
 //    assert('is_array($config)');
     var_dump($result);
     echo "...unit test complete\n";
 }
-
-
 define("CHECK_TOOL", "C:/Courses/tools/checkstyle-4.4/checkstyle-all-4.4.jar");
 define("CHECK_TEST", "com.puppycrawl.tools.checkstyle.Main");
 define("CHECK_STD", "C:/Courses/common/supplements/grade_checks.xml");
-
 /**
     Checks Java code for programming style.
  */
 class TestStyleJava extends TestCase {
     var $cfg;
     var $globList;
-
     /**
         Constructor with parameters for the test.
-
         @param $globList The list of file patterns to search. (added 11/23/08)
         // NTR: check to ensure .java file extension
     */
@@ -2406,11 +2201,9 @@ class TestStyleJava extends TestCase {
         }
         $this->globList = $globList;
     }
-
     /**
         Checks code for style in one or more files. Detected errors are
         written to a log and a summary saved in the TestResult.
-
         @param $tr The container for storing test results.
         @param $sectionName The section name for each TestResult.
         @return true if the test passes, otherwise returns false.
@@ -2424,17 +2217,14 @@ class TestStyleJava extends TestCase {
             }
         }
         $fileList = array_unique($fileList);
-
         // Open log file and write header
         $logExists = file_exists("style.log");
         if (!$handle = fopen("style.log", "a")) {
             die("Cannot open style!log\n");
         }
-
         if (!$logExists) {
             fwrite($handle, "*CheckStyle Results\n");
         }
-
         // Run the tests
         $errors = array();
         if (!$fileList) {
@@ -2463,7 +2253,6 @@ class TestStyleJava extends TestCase {
             }
         }
         fclose($handle);
-
         // Clean up error messages and return error summary
         for ($i = 0; $i < count($errors); $i++) {
             $errors[$i] = substr($errors[$i], strrpos($errors[$i], ": ") + 2);
@@ -2491,29 +2280,23 @@ class TestStyleJava extends TestCase {
             }
         }
         $errList = array_count_values($errors);
-
         // Save summary in TestResult
         foreach ($errList as $err=>$count) {
             $msg = $err;
             if ($count > 1) $msg .= " (x$count)";
             $tr->add($sectionName, $this->testName, $msg, 0);
         }
-
         return count($errors) === 0;
     }
 }
-
-
 /**
     Checks code for programming style.
  */
 class TestStylePHP extends TestCase {
     var $globList;
     var $log;
-
     /**
         Constructor with parameters for the test.
-
         @param $glob The file pattern to test.
      */
     function TestStylePHP($globList="*.php", $log="style.log") {
@@ -2524,11 +2307,9 @@ class TestStylePHP extends TestCase {
         $this->globList = $globList;
         $this->log = $log;
     }
-
     /**
         Checks code for style in one or more files. Detected errors are
         written to a log and a summary saved in the TestResult.
-
         @param $tr The container for storing test results.
         @param $sectionName The section name for each TestResult.
         @return true if the test passes, otherwise returns false.
@@ -2563,7 +2344,6 @@ class TestStylePHP extends TestCase {
                 }
             }
         }
-
         // Save errors in log file
         if ($errors) {
             if (!$handle = fopen($this->log, "w")) {
@@ -2576,7 +2356,6 @@ class TestStylePHP extends TestCase {
             fwrite($handle, "\nStyle errors: ".count($errors)."\n");
             fclose($handle);
         }
-
         // Clean up error messages and remove duplicates
         for ($i = 0; $i < count($errors); $i++) {
             if (substr_count($errors[$i], ":") > 0) {
@@ -2586,7 +2365,6 @@ class TestStylePHP extends TestCase {
             }
         }
         $errList = array_count_values($errors);
-
         // Save summary in TestResult
         foreach ($errList as $err=>$count) {
             $msg = $err;
@@ -2596,12 +2374,9 @@ class TestStylePHP extends TestCase {
         return count($errors) === 0;
     }
 }
-
-
 /**
     Validates HTML code for conformance using the W3C Markup Validator Web
     Service.
-
     @see http://validator.w3.org/docs/api.html
     @see http://pear.php.net/package/Services_W3C_HTMLValidator
 */
@@ -2610,10 +2385,8 @@ class TestStylePHP extends TestCase {
 class TestValidateHTML extends TestCase {
     var $globList;
     var $log;
-
     /**
         Constructor with parameters for the test.
-
         @param $glob The file pattern to test.
         @param $log The file in which to save the validation results.
      */
@@ -2625,12 +2398,10 @@ class TestValidateHTML extends TestCase {
         $this->globList = $globList;
         $this->log = $log;
     }
-
     /**
         Validates HTML for for conformance using the W3C Markup Validator
         Web Service. Detected errors are written to a log and a summary
         saved in the test results list.
-
         @param $tr The container for storing test results.
         @param $sectionName The section name for each TestResult.
         @return true if no errors are detected, otherwise returns false.
@@ -2643,9 +2414,7 @@ class TestValidateHTML extends TestCase {
             $tr->setProperty("no_files", true);
             return false;
         }
-
         require_once 'Services/W3C/HTMLValidator.php';
-
         // Open log file and write header
         $logExists = file_exists($this->log);
         if (!$handle = fopen($this->log, 'ab')) {
@@ -2654,7 +2423,6 @@ class TestValidateHTML extends TestCase {
         if (!$logExists) { // in case test run multiple times
             fwrite($handle, "*Validation Using W3C Service*\n");
         }
-
         $fileList = array();
         foreach($this->globList as $glob) {
             $fileList = array_merge($fileList, glob($glob, GLOB_BRACE));
@@ -2672,7 +2440,6 @@ class TestValidateHTML extends TestCase {
             fclose($handle) or print "Could not close file: $this->log\n";
             return false;
         }
-
         foreach($fileList as $file) {
             $v = new Services_W3C_HTMLValidator();
             $r = $v->validateFile($file);
@@ -2696,11 +2463,9 @@ class TestValidateHTML extends TestCase {
                 echo "Could not connect to W3C validator service.\n";
             }
         }
-
         fclose($handle) or print "Could not close file: $this->log\n";
         return count($r->errors) === 0; // Valid if no errors
     }
-
     function writeList($handle, $list, $type) {
         foreach ($list as $item) {
             $msg = " -$type: ";
