@@ -6,7 +6,7 @@
  author: Skakunov Alexander <i1t2b3@gmail.com>
  date: 23.8.2006
  description:
-   1. Before importing, you MUST: 
+   1. Before importing, you MUST:
      - establish connection with MySQL database and select database;
      - define CSV filename to import from.
    2. You CAN define several additional import attributes:
@@ -16,6 +16,9 @@
      - escape char: character to escape special symbols like enclose char, back slash [\] is default
      - encoding: string value which represents MySQL encoding table to parse files with. It's strongly recomended to use known values, not manual typing! Use get_encodings() method (or "SHOW CHARACTER SET" query) to ask the server for the encoding tables list
    3. You can read "error" property to get the text of the error after import. If import has been finished successfully, this property is empty.
+@author Ed Parrish
+Added LOCAL to  LOAD DATA LOCAL INFILE to resolve --secure-file-priv option
+@see: https://stackoverflow.com/questions/32737478/how-should-i-tackle-secure-file-priv-in-mysql
 */
 
 
@@ -31,7 +34,7 @@ class Quick_CSV_import
   var $arr_csv_columns; //array of columns
   var $table_exists; //flag: does table for import exist
   var $encoding; //encoding table, used to parse the incoming file. Added in 1.5 version
-  
+
   function Quick_CSV_import($file_name="")
   {
     $this->file_name = $file_name;
@@ -42,26 +45,26 @@ class Quick_CSV_import
     $this->field_escape_char   = "\\";
     $this->table_exists = false;
   }
-  
+
   function import()
   {
     if($this->table_name=="")
       $this->table_name = "temp_".date("d_m_Y_H_i_s");
-    
+
     $this->table_exists = false;
     $this->create_import_table();
-    
+
     if(empty($this->arr_csv_columns))
       $this->get_csv_header_fields();
-    
+
     /* change start. Added in 1.5 version */
     if("" != $this->encoding && "default" != $this->encoding)
       $this->set_encoding();
     /* change end */
-    
+
     if($this->table_exists)
     {
-      $sql = "LOAD DATA INFILE '".@mysql_escape_string($this->file_name).
+      $sql = "LOAD DATA LOCAL INFILE '".@mysql_escape_string($this->file_name).
              "' INTO TABLE `".$this->table_name.
              "` FIELDS TERMINATED BY '".@mysql_escape_string($this->field_separate_char).
              "' OPTIONALLY ENCLOSED BY '".@mysql_escape_string($this->field_enclose_char).
@@ -73,7 +76,7 @@ class Quick_CSV_import
       $this->error = mysql_error();
     }
   }
-  
+
   //returns array of CSV file columns
   function get_csv_header_fields()
   {
@@ -105,14 +108,14 @@ class Quick_CSV_import
       $this->error = "file cannot be opened: ".(""==$this->file_name ? "[empty]" : @mysql_escape_string($this->file_name));
     return $this->arr_csv_columns;
   }
-  
+
   function create_import_table()
   {
     $sql = "CREATE TABLE IF NOT EXISTS ".$this->table_name." (";
-    
+
     if(empty($this->arr_csv_columns))
       $this->get_csv_header_fields();
-    
+
     if(!empty($this->arr_csv_columns))
     {
       $arr = array();
@@ -125,7 +128,7 @@ class Quick_CSV_import
       $this->table_exists = ""==mysql_error();
     }
   }
-  
+
   /* change start. Added in 1.5 version */
   //returns recordset with all encoding tables names, supported by your database
   function get_encodings()
@@ -142,7 +145,7 @@ class Quick_CSV_import
     }
     return $rez;
   }
-  
+
   //defines the encoding of the server to parse to file
   function set_encoding($encoding="")
   {
