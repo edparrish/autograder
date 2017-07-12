@@ -314,7 +314,6 @@ class TestCompareSQL extends TestCase {
      */
     function runTest(&$tr, $sectionName) {
         require ROOT_DIR.'/includes/dbconvars.php';
-        //$dbname = $this->dbName; // overwrite the dbconvars value
         if ($this->dbName) $dbname = $this->dbName; // replace dbconvars
         if (!$this->sql1) die("sql1 not specifed\n");
         if (!$this->sql2) die("sql2 not specifed\n");
