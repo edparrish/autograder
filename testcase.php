@@ -1108,6 +1108,8 @@ class TestLoadDB extends TestCase {
         $cmd = "mysql -u$dbuser -p$dbpwd $dbname < \"$file\" >zdb.log 2>&1";
         `$cmd`;
         $info = file_get_contents("zdb.log"); // zdb.log is temp log file
+        // Remove unwanted warning
+        $info = preg_replace("/mysql: \[Warning\] Using a password[^\.]*\./", "", $info);
         // Collect errors and warnings
         $pattern = "/ERROR\s+\d+[()0-9 ]+at\s+line\s+\d+/i";
         $errors = preg_match_all($pattern, $info, $matches);
@@ -1132,7 +1134,6 @@ class TestLoadDB extends TestCase {
             $tr->setProperty("dbloaded", true);
         }
         // Clean up
-        $info = preg_replace("/mysql: \[Warning\] Using a password[^\.]*\./", "", $info);
         fwrite($handle, $info);
         unlink("zdb.log"); // remove temp log
         fclose($handle) or print "Could not close file: $this->log\n";
@@ -1305,8 +1306,10 @@ class TestRunLogSQL extends TestCase {
             $sql = preg_replace("/\s+/", " ", $sql); // remove extra whitespace
             $sql = trim($sql);
             if ($sql) {
-                $info = `mysql -u$dbuser -p$dbpwd -t -e"$sql" $dbname 2>&1`; // 7/11/17
+                // -t is table format, -e is execute
+                $info = `mysql -u$dbuser -p$dbpwd -t -e"$sql" $dbname 2>&1`;
             }
+            $info = preg_replace("/mysql: \[Warning\] Using a password[^\.]*\./", "", $info);
             $sqlOut = wordwrap("sql: $sql\n", 75);
             fwrite($handle, "$sqlOut\n");
             if (!$info) {
