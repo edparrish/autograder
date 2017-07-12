@@ -73,10 +73,10 @@ class GradeRunner extends Grader {
         $this->testRunMatch();
         $this->testStyleCPP();
         $this->testCompileJava();
-        $this->testJavaUnit();
-        $this->testStyleJava();
+//        $this->testJavaUnit();
+//        $this->testStyleJava();
         $this->testStylePHP();
-        $this->testHTML();
+//        $this->testHTML();
         $this->testReadme();
 
         // Subtotal score
