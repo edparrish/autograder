@@ -28,13 +28,14 @@ class GradeRunner extends Grader {
             $studentSql = $queryFC->toString();
             $tc = new TestCondition($studentSql);
             $this->fail($tc, -2, "Empty query1.txt file");
-            $tc = new TestRunLogSQL($studentSql, "query1.log", "test");
-            $this->run($tc, $studentSql);
+            $tc = new TestRunLogSQL($studentSql, "query1.log");
+            //$this->run($tc, $studentSql);
+            $this->fail($tc, -1, "Error running query 1", $studentSql);
             $sql = "SELECT ProductID, PriceEach, Quantity
                     FROM orderitems
                     WHERE OrderID = 2";
             // Compare against required output
-            $tc = new TestCompareSQL($sql, $studentSql, "test");
+            $tc = new TestCompareSQL($sql, $studentSql);
             $this->fail($tc, -1, "Error in query 1", $studentSql);
         }
         // Test query 2
@@ -47,15 +48,15 @@ class GradeRunner extends Grader {
             $studentSql = $queryFC->toString();
             $tc = new TestCondition($studentSql);
             $this->fail($tc, -2, "Empty query2.txt file");
-            $tc = new TestRunLogSQL($studentSql, "query2.log", "test");
-            $this->run($tc, $studentSql);
+            $tc = new TestRunLogSQL($studentSql, "query2.log");
+            $this->fail($tc, -1, "Error running query 2", $studentSql);
             $sql = "SELECT SupplierName,purchorders.Qty,DateOrdered,ProductName
                 FROM suppliers, products, purchorders
                 WHERE suppliers.ID=products.SupplierID
                 AND products.ID=purchorders.ProductID
                 ORDER BY SupplierName, DateOrdered";
             // Compare against required output
-            $tc = new TestCompareSQL($sql, $studentSql, "test");
+            $tc = new TestCompareSQL($sql, $studentSql);
             $this->fail($tc, -1, "Error in query 2", $studentSql);
             // Check query for required elements.
             $pat = "/ORDER\s+BY\s+(suppliers\.)?SupplierName/i";
@@ -88,8 +89,8 @@ class GradeRunner extends Grader {
             $studentSql = $queryFC->toString();
             $tc = new TestCondition($studentSql);
             $this->fail($tc, -1, "Empty query3.txt file", $sqlFile);
-            $this->run(new TestRunLogSQL($studentSql, "query3.log",
-                "test"), $studentSql);
+            $tc = new TestRunLogSQL($studentSql, "query3.log");
+            $this->fail($tc, -1, "Error running XC query", $studentSql);
             $sql = "SELECT SupplierName,suppliers.ID,ProductName,products.ID
                     FROM suppliers LEFT JOIN products
                     ON suppliers.ID = products.SupplierID
