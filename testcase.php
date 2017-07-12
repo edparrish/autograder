@@ -1108,7 +1108,7 @@ class TestLoadDB extends TestCase {
         `$cmd`;
         $info = file_get_contents("zdb.log"); // zdb.log is temp log file
         // Remove unwanted warning
-        $info = preg_replace("/mysql: \[Warning\] Using a password[^\R]*\R/", "", $info);
+        $info = preg_replace("/mysql: \[Warning\] Using a password[^\.]*\./", "", $info);
         // Collect errors and warnings
         $pattern = "/ERROR\s+\d+[()0-9 ]+at\s+line\s+\d+/i";
         $errors = preg_match_all($pattern, $info, $matches);
@@ -1308,7 +1308,7 @@ class TestRunLogSQL extends TestCase {
                 // -t is table format, -e is execute
                 $info = `mysql -u$dbuser -p$dbpwd -t -e"$sql" $dbname 2>&1`;
             }
-            $info = preg_replace("/mysql: \[Warning\] Using a password[^\R]*\R/", "", $info);
+            $info = preg_replace("/mysql: \[Warning\] Using a password[^\.]*\./", "", $info);
             $sqlOut = wordwrap("sql: $sql\n", 75);
             fwrite($handle, "$sqlOut\n");
             if (!$info) {
