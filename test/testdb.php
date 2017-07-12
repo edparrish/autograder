@@ -1,9 +1,8 @@
 <?php
-// Test database features with example student files
+// Test database grading with example student files
 include_once("../grader.php");
 // Absolute path to student submissions
 define("TEST_DIR", ROOT_DIR.'/test/testfiles');
-define("CODELAB_TABLE", "roster");
 
 $students = null; // for all students
 $students = array("db1", "db2"); // list student folders to test
