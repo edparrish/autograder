@@ -1,4 +1,7 @@
 <?php
+/**
+Configuration settings for Autograder.
+*/
 define( 'ROOT_DIR', dirname(__FILE__) );
 
 /*
