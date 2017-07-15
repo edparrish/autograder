@@ -24,9 +24,9 @@ define("TIMEZONE", "America/Los_Angeles");
 // Define the path to the SSL CA certificate
 define("CACERT_PATH", realpath("./cacert.pem"));
 // Set the following to your college domain.
-$canvasDomain = 'cabrillo.instructure.com';
+$canvasDomain = 'your_college.instructure.com';
 // Generate the token in Canvas and assign it here.
-$token = '6243~8tpjZSuRDOWS4bzzVhp8y8xrTNVxnQuuak6gJE7mTUGYq1tLAFEg1n1suwSJueZ4';
+$token = 'put token here';
 
 // This is the header containing the authorization token from Canvas
 $tokenHeader = array("Authorization: Bearer ".$token);
