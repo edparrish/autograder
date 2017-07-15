@@ -17,6 +17,7 @@ Save in location of your choice and update cacert path to match your location.
 @author Kenneth Larsen from https://community.canvaslms.com/thread/2681 on 8/2016.
 @author Ed Parrish changes and additions
 */
+require_once '../ag-config.php';
 // Define the path to the SSL CA certificate
 define("CACERT_PATH", ROOT_DIR.'/ajax/cacert.pem');
 // Set the following to your college domain.
