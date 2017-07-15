@@ -1,9 +1,5 @@
 <?php
 // PHP script for manager.html AJAX calls
-//if (file_exists('../ag-config.php')) include_once '../ag-config.php';
-//require_once ROOT_DIR.'/ajax/canvasAPI.php';
-//require_once ROOT_DIR.'/ajax/canvasdownload.php';
-//require_once ROOT_DIR.'/ajax/canvasputgrade.php';
 require_once 'canvasAPI.php';
 require_once 'canvasdownload.php';
 require_once 'canvasputgrade.php';
