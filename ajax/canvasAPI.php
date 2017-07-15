@@ -1,6 +1,14 @@
 <?php
-/*
+/**
 This page contains a variety of functions that can be used to access the Canvas API
+
+The canvasDomain is the URL for the Canvas API. For example, the URL for
+Cabrillo College would be
+"https://cabrillo.instructure.com/api/v1".
+
+The token is a cryptographically unique string of characters and numbers you
+must generate in Canvas. To generate one, login to Canvas, go to
+"Accounts" and "Settings" and click on the "New Access Token" button.
 
 Windows needs an SSL CA cert from: https://curl.haxx.se/docs/caextract.html
 Download cacert.pem from the page by clicking the link.
@@ -9,8 +17,12 @@ Save in location of your choice and update cacert path to match your location.
 @author Kenneth Larsen from https://community.canvaslms.com/thread/2681 on 8/2016.
 @author Ed Parrish changes and additions
 */
-if (file_exists('../ag-config.php')) require_once '../ag-config.php';
+// Define the path to the SSL CA certificate
 define("CACERT_PATH", ROOT_DIR.'/ajax/cacert.pem');
+// Set the following to your college domain.
+$canvasDomain = 'cabrillo.instructure.com';
+// Generate the token in Canvas and assign it here.
+$token = '6243~joPtAl28NNePHZXf7Lfkcb8wXrzx2ilHHqeFBlxFFPVanBMISkMwhqDN5xU8Mz6i';
 
 // This is the header containing the authorization token from Canvas
 $tokenHeader = array("Authorization: Bearer ".$token);
@@ -356,18 +368,4 @@ function listStudentUsers($courseID, $testStudent=true) {
     $response = curlGet($apiUrl);
     return $response;
 }
-
-/*
-https://cabrillo.instructure.com/submission_comments/51705
-POST https://cabrillo.instructure.com/submission_comments/51705
-POST https://cabrillo.instructure.com/courses/3113/gradebook/update_submission
-GET https://cabrillo.instructure.com/courses/3113/assignments/27803/submissions/20109
-For test and debug:
-$courseID = 3113;
-$asnID = 27803;
-//$resp = listStudentUsers($courseID);
-$apiUrl = "conversations";
-$resp = curlGet($apiUrl);
-var_dump($resp);
-*/
 ?>
