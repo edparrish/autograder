@@ -11,19 +11,22 @@ must generate in Canvas. To generate one, login to Canvas, go to
 "Accounts" and "Settings" and click on the "New Access Token" button.
 
 Windows needs an SSL CA cert from: https://curl.haxx.se/docs/caextract.html
-Download cacert.pem from the page by clicking the link.
-Save in location of your choice and update cacert path to match your location.
+To update, download cacert.pem from the page and replace the file in folder ajax.
 
-@author Kenneth Larsen from https://community.canvaslms.com/thread/2681 on 8/2016.
+To display the correct date and time, update the TIMEZONE setting. For timezones see:
+http://php.net/manual/en/timezones.php
+
+@author Kenneth Larsen from http s://community.canvaslms.com/thread/2681 on 8/2016.
 @author Ed Parrish changes and additions
 */
-require_once '../ag-config.php';
+// Define the timezone for manager.php; @see: http://php.net/manual/en/timezones.php
+define("TIMEZONE", "America/Los_Angeles");
 // Define the path to the SSL CA certificate
-define("CACERT_PATH", ROOT_DIR.'/ajax/cacert.pem');
+define("CACERT_PATH", realpath("./cacert.pem"));
 // Set the following to your college domain.
-$canvasDomain = 'yourcollege.instructure.com';
+$canvasDomain = 'cabrillo.instructure.com';
 // Generate the token in Canvas and assign it here.
-$token = 'put token here';
+$token = '6243~8tpjZSuRDOWS4bzzVhp8y8xrTNVxnQuuak6gJE7mTUGYq1tLAFEg1n1suwSJueZ4';
 
 // This is the header containing the authorization token from Canvas
 $tokenHeader = array("Authorization: Bearer ".$token);

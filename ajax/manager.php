@@ -48,6 +48,7 @@ function getAssignments($cid) {
 }
 
 function showAssignments($cid, $resp) {
+    date_default_timezone_set(TIMEZONE);
 echo <<<EOD
 <table>
 <caption>Assignments with online-upload files</caption>
