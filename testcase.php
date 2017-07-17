@@ -264,10 +264,6 @@ class TestCompareFiles extends TestCase {
         $lines1 = $this->file1->toArray();
         $lines2 = $this->file2->toArray();
         if (count($lines1) !== count($lines2)) {
-//            if ($this->showErrors) {
-//                $msg = "Files have different number of (non-blank) lines";
-//                $tr->add($sectionName, $this->testName, $msg, 0);
-//            }
             return false;
         } else {
             for ($i = 0; $i < count($lines1); $i++) {
@@ -657,7 +653,6 @@ class TestExtraCreditClaim extends TestCase {
         if (!is_object($grader)) die("Missing Grader object!\n");
         $this->testName = get_class();
         $this->grader = $grader;
-//        $this->value = $value;
     }
     /**
         Tests if extra credit was claimed in the README.txt file.
@@ -1068,7 +1063,6 @@ class TestLoadDB extends TestCase {
             or die("Could not connect to mysql");
         mysql_select_db($dbname, $dbCnx)
             or die("Could not select db: $dbname");
-        //$result = mysql_list_tables($dbname);
         $sql = "SHOW TABLES FROM $dbname";
         $result = mysql_query($sql);
         while ($row = mysql_fetch_row($result)) {
