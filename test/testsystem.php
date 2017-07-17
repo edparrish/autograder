@@ -266,7 +266,6 @@ class GradeRunner extends Grader {
         assert('$this->getProperty("compiles") === false');
         $this->resetTestResults();
         // This should pass if the file is present
-        //$cmd = "g++ -W -Wall --pedantic -o $this->baseName $this->cppFile";
         $this->pass(new TestCompileCPP($this->cppFile), 1, "No errors during compile");
         assert('$this->getProperty("compiles") !== NULL');
         $this->report(new CompileEvaluator(4, 4), "CPP Compilation Score:");
