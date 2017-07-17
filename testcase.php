@@ -95,7 +95,7 @@ class TestCase {
      */
     function _deleteFiles($fileList) {
         foreach($fileList as $file) {
-            unlink($file) or die("Could not delete $file\n");
+            unlink($file) or die("In TestCase could not delete $file\n");
         }
     }
 }
@@ -264,10 +264,10 @@ class TestCompareFiles extends TestCase {
         $lines1 = $this->file1->toArray();
         $lines2 = $this->file2->toArray();
         if (count($lines1) !== count($lines2)) {
-            if ($this->showErrors) {
-                $msg = "Files have different number of (non-blank) lines";
-                $tr->add($sectionName, $this->testName, $msg, 0);
-            }
+//            if ($this->showErrors) {
+//                $msg = "Files have different number of (non-blank) lines";
+//                $tr->add($sectionName, $this->testName, $msg, 0);
+//            }
             return false;
         } else {
             for ($i = 0; $i < count($lines1); $i++) {
@@ -648,7 +648,7 @@ class TestCondition extends TestCase {
  */
 class TestExtraCreditClaim extends TestCase {
     var $grader;
-    var $value;
+//    var $value;
     /**
         Constructor with parameters for the test.
         @param $grader The Grader object.
@@ -657,7 +657,7 @@ class TestExtraCreditClaim extends TestCase {
         if (!is_object($grader)) die("Missing Grader object!\n");
         $this->testName = get_class();
         $this->grader = $grader;
-        $this->value = $value;
+//        $this->value = $value;
     }
     /**
         Tests if extra credit was claimed in the README.txt file.
@@ -1068,7 +1068,9 @@ class TestLoadDB extends TestCase {
             or die("Could not connect to mysql");
         mysql_select_db($dbname, $dbCnx)
             or die("Could not select db: $dbname");
-        $result = mysql_list_tables($dbname);
+        //$result = mysql_list_tables($dbname);
+        $sql = "SHOW TABLES FROM $dbname";
+        $result = mysql_query($sql);
         while ($row = mysql_fetch_row($result)) {
             $table = $row[0];
             mysql_query("DROP TABLE $table");

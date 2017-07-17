@@ -3,6 +3,7 @@ if (file_exists('../ag-config.php')) include_once '../ag-config.php';
 require_once ROOT_DIR.'/filecontents.php';
 require_once ROOT_DIR.'/filefinder.php';
 require_once ROOT_DIR.'/includes/util.php';
+define("DEBUG", false); // set true to echo debug statements otherwise false
 
 /**
     Extracts data from a README.txt file.
@@ -121,8 +122,10 @@ class Readme {
             if ($strength > 1) return $file;
         }
         // For debug, list all possible README files underconsideration
-        //echo "\nMultiple possible README files found:\n";
-        //$this->listFiles($rmf->files());
+        if (DEBUG) {
+            echo "\nMultiple possible README files found:\n";
+            $this->listFiles($rmf->files());
+        }
         // If one file is the exact name, use it?
         $count = 0;
         $exactName = "";
@@ -135,7 +138,7 @@ class Readme {
         if ($count === 1) {
             $strength = $this->readmeStrength($exactName);
             if ($strength > 1) {
-                echo "Single exact name README file chosen ($strength): $exactName\n";
+                if (DEBUG) echo "Single exact name README file chosen ($strength): $exactName\n";
                 return $exactName;
             }
         }
@@ -145,7 +148,7 @@ class Readme {
             $file = $fileList[0];
             $strength = $this->readmeStrength($file);
             if ($strength > 1) {
-                //echo "Single newest README file chosen ($strength): $file\n";
+                if (DEBUG) echo "Single newest README file chosen ($strength): $file\n";
                 return $file;
             }
         }
@@ -164,10 +167,10 @@ class Readme {
             }
         }
         if ($maxStrength > 3) { // was 1 until 2/13/17
-            //echo "Strongest ($maxStrength) newest README file chosen: $maxFile\n";
+            if (DEBUG) echo "Strongest ($maxStrength) newest README file chosen: $maxFile\n";
             return $maxFile;
         }
-        //echo "No appropriate README found\n";
+        if (DEBUG) echo "No appropriate README found\n";
         return "";
     }
 
@@ -305,6 +308,7 @@ class Readme {
 // Uncomment the following to run unit tests
 //testReadme();
 function testReadme() {
+    error_reporting(E_ALL | E_STRICT); // report all problems
     $path = ROOT_DIR.'/test/testfiles/studentGood';
     chdir($path) or die("Could not change to path: $path\n");
     echo "Testing Readme functions in $path:\n";

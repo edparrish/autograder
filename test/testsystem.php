@@ -1,6 +1,7 @@
 <?php
 // Test all aspects of system
 include_once("../grader.php");
+error_reporting(E_ALL | E_STRICT); // report all problems
 define("TEST_DIR", ROOT_DIR."/test/testfiles");
 define("STYLE_CPP", ROOT_DIR."/test/style-cpp.txt");
 define("STYLE_JAVA", ROOT_DIR."/test/style-java.xml"); // common/supplements
@@ -255,9 +256,6 @@ class GradeRunner extends Grader {
         $this->setSectionName("testCompileCPP");
         echo "...testing TestCompileCPP\n";
         // This should fail since there is no bogus.cpp
-        $cmd = "g++ -W -Wall --pedantic -o $this->baseName bogus.cpp";
-        $path = dirname($testFile);
-        //$pass = $this->run(new TestCompileCPP($cmd));
         $pass = $this->run(new TestCompileCPP("bogus.cpp"));
         assert('$pass === false');
         assert('$this->getProperty("compiles") === false');
@@ -501,7 +499,7 @@ class GradeRunner extends Grader {
         //assert('is_int($gradePercentage)');
         assert('$gradePercentage >= 0');
         // Manually calulating the overall comment
-        $percentage = intval($this->score / $maxScore * 100);
+        $percentage = intval($this->getScore() / $maxScore * 100);
         $comments = array(
             100=>"$gradePercentage% is awesome!",
             90=>"$gradePercentage%! Way to go, dude!",

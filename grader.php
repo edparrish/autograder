@@ -760,6 +760,7 @@ class Grader {
 
         // Since WebCT 6, registered name is embedded in the directory
         $pat = "/.*(\w+)\s+([\w-]+)\s+-\s+\d+$/iU";
+        $matches = "";
         preg_match($pat, $baseName, $matches);
         if ($matches) {
             $this->firstName = trim($matches[1]);
