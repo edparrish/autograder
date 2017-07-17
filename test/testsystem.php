@@ -8,7 +8,7 @@ define("STYLE_JAVA", ROOT_DIR."/test/style-java.xml"); // common/supplements
 define("CODELAB_TABLE", "roster");
 
 $students = null;
-$students = array("studentGood"/*, "studentPoor"*/);
+$students = array("studentgood"/*, "studentPoor"*/);
 
 // Put the tests here but call runTest() to run tests on all students
 class GradeRunner extends Grader {

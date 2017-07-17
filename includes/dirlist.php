@@ -22,7 +22,7 @@ class DirList {
         if (is_array($subdirs)) {
             if (count($subdirs) == 0) echo "Empty subdirs list!\n";
             foreach ($subdirs as $dir) {
-                $dir = $this->path."/".$dir;
+                $dir = $path.'/'.$dir;
                 // Check subdirectory is valid
                 chdir($dir) or die("Could not change to directory: $dir\n");
                 $this->list[] = $dir;

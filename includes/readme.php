@@ -3,6 +3,7 @@ if (file_exists('../ag-config.php')) include_once '../ag-config.php';
 require_once ROOT_DIR.'/filecontents.php';
 require_once ROOT_DIR.'/filefinder.php';
 require_once ROOT_DIR.'/includes/util.php';
+if (!defined("DEBUG")) define("DEBUG", false); // true to echo debug statements otherwise false
 
 /**
     Extracts data from a README.txt file.
@@ -307,7 +308,7 @@ class Readme {
 // Uncomment the following to run unit tests
 //testReadme();
 function testReadme() {
-    define("DEBUG", true);
+    define("DEBUG", true); // set true to echo debug statements otherwise false
     error_reporting(E_ALL | E_STRICT); // report all problems
     $path = ROOT_DIR.'/test/testfiles/studentGood';
     chdir($path) or die("Could not change to path: $path\n");
