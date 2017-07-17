@@ -30,6 +30,8 @@ I suggest you get tutoring or work with a partner.
 class GradeRunner extends Grader {
     // Test commands to run for each student submission.
     function test() {
+        $firstName = $this->getFirstName();
+        $lastName = $this->getLastName();
         deleteGlobRec("*.[eE][xX][eE]", $this->getDir()); // Windows
         assert(!fileExists("*.[eE][xX][eE]"));
 

@@ -788,6 +788,7 @@ class Grader {
         }
 
         // Student reported name in their style
+        $studentName = "";
         if (fileExists("[Rr][Ee][Aa][Dd][Mm][Ee]*")) {
             $studentName = trim($this->readme->getStudentName());
         }
