@@ -128,13 +128,8 @@ class GradeRunner extends Grader {
         $good = "Overall good work with a few problem areas.";
         $sat = "Satisfactory overall with some problem areas.";
         $pass = "Passable overall with some problem areas.";
-        if ($scrCL <= 2) {
-            $good = "Good overall but would be better if you did the CodeLab.";
-            $sat = "Satisfactory overall but would be better if you did the CodeLab.";
-            $pass = "Passable overall but would be better if you did the CodeLab.";
-        }
-        $msg = "You are missing main parts of the assignment like: $fileName\nIf there was a problem, let me know right away.";
-        if ($testFile) $msg = "You are missing many parts of the assignment";
+        $poor = "You are missing main parts of the assignment like: $fileName\nIf there was a problem, let me know right away.";
+        if ($testFile) $poor = "You are missing many parts of the assignment";
         $comments = array(
             $superior=>"Truly superior work!",
             100=>"Excellent work!",
@@ -142,7 +137,7 @@ class GradeRunner extends Grader {
             80=>$good,
             70=>$sat,
             60=>$pass,
-            10=>$msg,
+            10=>$poor,
             0=>"You are missing most parts of the assignment"
         );
         $this->reportOverall($maxScore, false, $comments, true);
