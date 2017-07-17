@@ -761,10 +761,12 @@ class Grader {
         // Since WebCT 6, registered name is embedded in the directory
         $pat = "/.*(\w+)\s+([\w-]+)\s+-\s+\d+$/iU";
         preg_match($pat, $baseName, $matches);
-        $this->firstName = trim($matches[1]);
-        $this->lastName = trim($matches[2]);
-        if ($this->lastName) {
-            $this->reportedName = trim($this->firstName." ".$this->lastName);
+        if ($matches) {
+            $this->firstName = trim($matches[1]);
+            $this->lastName = trim($matches[2]);
+            if ($this->lastName) {
+                $this->reportedName = trim($this->firstName." ".$this->lastName);
+            }
         }
 
         // Since Blackboard 9, registered name is in the comments file
