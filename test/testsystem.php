@@ -211,25 +211,23 @@ class GradeRunner extends Grader {
             "Empty query produced no output");
         assert('$pass === false');
         // This should fail
-        $pass =  $this->fail(new TestRunLogSQL("bogus sql", "bogusql.log",
-            "artzy"), -1, "Bogus query failed");
+        $pass =  $this->fail(new TestRunLogSQL("bogus sql", "bogusql.log"), -1, "Bogus query failed");
         assert('$pass === false');
         // This should pass if the student did it correctly
         $studentSql = file_get_contents($this->query3File);
         $studentSql = trim($studentSql);
-        $pass =  $this->run(new TestRunLogSQL($studentSql, "bonusquery.log",
-            "artzy"), $studentSql);
+        $pass =  $this->run(new TestRunLogSQL($studentSql, "bonusquery.log"), $studentSql);
         assert('is_bool($pass)');
         echo "...testing TestCompareSQL\n";
         // This should fail
         $sql = "SELECT SupplierName, ProductName
                 FROM suppliers LEFT JOIN products
                 ON suppliers.ID = products.SupplierID;";
-        $pass = $this->fail(new TestCompareSQL($sql, "bogus", "artzy"), -1,
+        $pass = $this->fail(new TestCompareSQL($sql, "bogus"), -1,
             "Error in bogus query", $studentSql);
         assert('$pass === false');
         // This should pass if the student did it correctly
-        $pass = $this->fail(new TestCompareSQL($sql, $studentSql, "artzy"), -1,
+        $pass = $this->fail(new TestCompareSQL($sql, $studentSql), -1,
             "Error in query 3", $studentSql);
         assert('is_bool($pass)');
         $score = $this->report(new ValueEvaluator(4),
