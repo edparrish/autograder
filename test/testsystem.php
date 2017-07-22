@@ -147,7 +147,7 @@ class GradeRunner extends Grader {
 
         echo "...testing ValueEvaluator\n";
         $score = $this->report(new ValueEvaluator(10, 10, 0, .9, 1),
-            "ValueEvaluator Score:", true, $sectionName);
+            "ValueEvaluator Score (10):", true, $sectionName);
     }
 
     function testFileExists() {
@@ -175,7 +175,7 @@ class GradeRunner extends Grader {
         assert('$pass === false');
         assert('$this->isErrorMessage("Missing file: bogus.txt")');
         $score = $this->report(new ValueEvaluator(2, 2),
-            "TestFileExists Score:", true);
+            "TestFileExists Score (2):", true);
         assert('is_numeric($score)');
         assert('$score >= 0');
         assert('2 >= $score');
@@ -197,7 +197,7 @@ class GradeRunner extends Grader {
         assert('is_bool($pass)');
         assert('is_bool($this->getProperty("dbloaded"))');
         $score = $this->report(new LoadDBEvaluator(4),
-            "Database Export Score:");
+            "Database Export Score (4):");
         assert('is_numeric($score)');
         assert('$score >= 0');
         assert('4 >= $score');
@@ -231,7 +231,7 @@ class GradeRunner extends Grader {
             "Error in query 3", $studentSql);
         assert('is_bool($pass)');
         $score = $this->report(new ValueEvaluator(4),
-            "SQL Queries Score:");
+            "SQL Queries Score (4):");
         assert('is_numeric($score)');
         assert('$score >= 0');
         assert('4 >= $score');
@@ -243,11 +243,14 @@ class GradeRunner extends Grader {
         $firstName = $this->getFirstName();
         $lastName = $this->getLastName();
         $this->run(new TestCodeLab(CODELAB_TABLE, $lastName, $firstName));
-        $score = $this->report(new CodeLabEvaluator(1.75, 1.75, 0, 10),
-            "CodeLab Score:");
+        $maxPts = 8;
+        $numExer = 18;
+        $each = $maxPts / $numExer;
+        $score = $this->report(new CodeLabEvaluator($each, $each, 0, $maxPts),
+            "CodeLab Score ($maxPts):");
         assert('is_numeric($score)');
         assert('$score >= 0');
-        assert('10 >= $score');
+        assert('$maxPts >= $score');
     }
 
     function testCompileCPP() {
@@ -264,9 +267,10 @@ class GradeRunner extends Grader {
         assert('$this->getProperty("compiles") === false');
         $this->resetTestResults();
         // This should pass if the file is present
-        $this->pass(new TestCompileCPP($this->cppFile), 1, "No errors during compile");
+        $this->fail(new TestCompileCPP($this->cppFile), -4,
+            "Did not compile--code must compile for a good score");
         assert('$this->getProperty("compiles") !== NULL');
-        $this->report(new CompileEvaluator(4, 4), "CPP Compilation Score:");
+        $this->report(new CompileEvaluator(4, 4), "C++ Compilation Score (4):");
     }
 
     function testRunMatch() {
@@ -332,7 +336,7 @@ class GradeRunner extends Grader {
         echo "...testing PointMapEvaluator\n";
         $pointScoreMap = array(10=>5, 9=>4, 6=>3, 4=>2, 1=>1);
         $score = $this->report(new PointMapEvaluator($pointScoreMap, 10),
-            "Run and Match Score:");
+            "Run and Match Score (10):");
         assert('is_numeric($score)');
         assert('$score >= 0');
         assert('5 >= $score');
@@ -345,7 +349,7 @@ class GradeRunner extends Grader {
         $pass = $this->run(new TestStyleCPP($cppFC, STYLE_CPP));
         assert('is_bool($pass)');
         $score = $this->report(new StyleEvaluator(4),
-            "CPP Style Score:");
+            "CPP Style Score (4):");
         assert('is_numeric($score)');
     }
 
@@ -361,10 +365,10 @@ class GradeRunner extends Grader {
         assert('$this->getProperty("compiles") === false');
         $this->resetTestResults();
         // This should pass if a syntactically correct Java file is present
-        $this->pass(new TestCompileJava(), 1, "No errors during compile");
+        $this->pass(new TestCompileJava(), 4, "No errors during compile");
         $compiles = $this->getProperty("compiles");
         assert('$compiles !== NULL');
-        $this->report(new CompileEvaluator(4, 4), "Java Compilation Score:");
+        $this->report(new CompileEvaluator(0, 4), "Java Compilation Score (4):");
     }
 
     function testJavaUnit() {
@@ -381,7 +385,7 @@ class GradeRunner extends Grader {
         if (file_exists("ArrayUtilTest.java")) assert('$pass === true');
         assert('$this->isErrorMessage("ArrayUtilTest passed")');
         $score = $this->report(new ValueEvaluator(10),
-            "Java Unit Score:", true);
+            "Java Unit Score (10):", true);
     }
 
     // NTR: need to have a badly commented Java file and check the messages
@@ -390,7 +394,7 @@ class GradeRunner extends Grader {
         echo "...testing TestStyleJava\n";
         $pass = $this->run(new TestStyleJava(STYLE_JAVA, $this->javaFile));
         assert('is_bool($pass)');
-        $score = $this->report(new StyleEvaluator(4), "Java Style Score:");
+        $score = $this->report(new StyleEvaluator(4), "Java Style Score (4):");
         assert('is_numeric($score)');
     }
 
@@ -400,7 +404,7 @@ class GradeRunner extends Grader {
         $pass = $this->run(new TestStylePHP($this->phpFile));
         assert('is_bool($pass)');
         $score = $this->report(new StyleEvaluator(2),
-            "PHP Documentation Score:");
+            "PHP Documentation Score (2):");
         assert('is_numeric($score)');
     }
 
@@ -426,10 +430,8 @@ class GradeRunner extends Grader {
         // This may pass if the file is good
         $pass = $this->run(new TestValidateHTML("mypage.html"));
         assert('is_bool($pass)');
-//var_dump($this->results);
-
         $score = $this->report(new StyleEvaluator(4),
-            "HTML Validation Score:");
+            "HTML Validation Score (4):");
         assert('is_numeric($score)');
         assert('$score >= 0');
         assert('2 >= $score');
@@ -441,7 +443,7 @@ class GradeRunner extends Grader {
         $pass = $this->run(new TestReadme($this));
         assert('is_bool($pass)');
         $score = $this->report(new ReadmeEvaluator(2),
-            "README.txt Score:");
+            "README.txt Score (2):");
     }
 
     function testExtraCredit() {
@@ -487,7 +489,7 @@ class GradeRunner extends Grader {
         $pass = $this->pass(new TestMatch("/toString\s*\(/i", $cppFC), 2,
             "Added function toString()");
         $score = $this->report(new ValueEvaluator(4, 4),
-            "Extra Credit Score:", true);
+            "Extra Credit Score (4):", true);
     }
 
     function testReportOverall($maxScore) {

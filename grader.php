@@ -271,7 +271,7 @@ class Grader {
     * @param $eraseData Set true to remove table and all data prior to loading.
     * @return true if the load was successful, otherwise false.
     */
-    function loadCSV($csvFileName, $tableName, $eraseData=true) {
+    function loadCSVdb($csvFileName, $tableName, $eraseData=true) {
         $db = new DB();
         if ($eraseData) {
             $sql = "DROP TABLE IF EXISTS $tableName";
@@ -280,7 +280,6 @@ class Grader {
         $end = $db->loadCSV($csvFileName, $tableName);
         return $end;
     }
-
 
     /**
         Load a CodeLab roster CSV file into a database table. Allows
@@ -293,7 +292,7 @@ class Grader {
                database table after loading.
      */
     function loadCodeLab($csvFileName, $tableName, $sqlFile="") {
-        $this->loadCSV($csvFileName, $tableName);
+        $this->loadCSVdb($csvFileName, $tableName);
         if ($sqlFile) {
             if (!file_exists($sqlFile)) {
                 die("Error: $sqlFile does not exist (aborting)\n");

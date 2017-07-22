@@ -45,7 +45,7 @@ class GradeRunner extends Grader {
 
         // 2. Compile the test file
         $tc = new TestCompileCPP($testFile);
-        $compiles = $this->fail($tc, -10);
+        $compiles = $this->fail($tc, -4);
         $eval = new CompileEvaluator(4);
         $score = $this->report($eval, "Compilation Score (4):");
 
