@@ -575,7 +575,7 @@ class TestCompileJava extends TestCase {
             $msg = "Errors found during compile (x$errors)";
             $tr->add($sectionName, $this->testName, $msg, 0);
         } else if (strlen($info) != 0) {
-            $msg = "Problems running $cmd";
+            $msg = "Problems running $this->cmd";
             $tr->add($sectionName, $this->testName, $msg, 0);
         } else {
             $msg = "No errors during compile\n";
