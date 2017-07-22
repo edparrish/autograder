@@ -449,22 +449,18 @@ class TestCompileCPP extends TestCase {
             $msg = "Compiler cannot find your .cpp file (spaces in pathname or bad include?)";
             fwrite($handle, "\n\n$msg.\n");
             $tr->add($sectionName, $this->testName, $msg, 0);
-            //$tr->setProperty("compiles", false);
         } else if (substr_count($info, "no input files") != 0) {
             $msg = "Did not find the CPP file";
             //fwrite($handle, "\n$msg.\n");
             $tr->add($sectionName, $this->testName, $msg, 0);
-            //$tr->setProperty("compiles", false);
         } else if (substr_count($info, "argument to `-o' missing") != 0) {
             $msg = "No files to compile";
             fwrite($handle, "\n$msg.\n");
             $tr->add($sectionName, $this->testName, $msg, 0);
-            //$tr->setProperty("compiles", false);
         } else if (substr_count($info, "ld returned 1") != 0) {
             $msg = "Did not compile due to linker errors";
             fwrite($handle, "\n$msg.\n");
             $tr->add($sectionName, $this->testName, $msg, 0);
-            //$tr->setProperty("compiles", false);
         } else if (substr_count($info, "Stop.") != 0) {
             $msg = "Did not compile due to Makefile errors";
             fwrite($handle, "\n\n$msg.\n");
@@ -474,19 +470,16 @@ class TestCompileCPP extends TestCase {
             $msg = "Errors found during compile (x$errors)";
             fwrite($handle, "\nTotal errors: $errors\n");
             $tr->add($sectionName, $this->testName, $msg, 0);
-            //$tr->setProperty("compiles", false);
         } else if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'
                 && !fileExists("$path/$base.exe")) {
             $msg = "Did not create an executable file";
             fwrite($handle, "\n$msg.\n");
             $tr->add($sectionName, $this->testName, $msg, 0);
-            //$tr->setProperty("compiles", false);
         } else if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN'
                 && !fileExists("$path/$base")) {
             $msg = "Did not create an executable file";
             fwrite($handle, "\n$msg.\n");
             $tr->add($sectionName, $this->testName, $msg, 0);
-            //$tr->setProperty("compiles", false);
         } else {
             if ($info) fwrite($handle, "\n\n");
             fwrite($handle, "No errors during compile\n");
@@ -541,6 +534,7 @@ class TestCompileJava extends TestCase {
         @return true if the code compiles, otherwise returns false.
      */
     function runTest(&$tr, $sectionName) {
+        $tr->setProperty("compiles", false); // pessimistic
         $logExists = file_exists("compile.log");
         // Open log file and write header
         if (!$handle = fopen($this->log, 'ab')) {
@@ -570,20 +564,22 @@ class TestCompileJava extends TestCase {
             fwrite($handle,"Bad or incomplete compiler command.\n");
         }
         // Collect errors and warnings
-        preg_match("/(\d+)\s+error/", $info, $matches);
+        preg_match("/(\d+)\s+error|command/", $info, $matches);
         $errors = 0;
         if (isset($matches[1])) $errors = $matches[1];
         if (substr_count($info, "file not found") != 0) {
             $msg = "No files to compile";
             fwrite($handle, "$msg.\n");
             $tr->add($sectionName, $this->testName, $msg, 0);
-            $tr->setProperty("compiles", false);
         } else if ($errors != 0) {
             $msg = "Errors found during compile (x$errors)";
             $tr->add($sectionName, $this->testName, $msg, 0);
-            $tr->setProperty("compiles", false);
+        } else if (strlen($info) != 0) {
+            $msg = "Problems running $cmd";
+            $tr->add($sectionName, $this->testName, $msg, 0);
         } else {
-            fwrite($handle, "No errors during compile\n");
+            $msg = "No errors during compile\n";
+            fwrite($handle, $msg);
             $tr->setProperty("compiles", true);
         }
         $warnings = substr_count($info, "warning");
@@ -599,6 +595,7 @@ class TestCompileJava extends TestCase {
             $msg = "Notes found during compile";
             $tr->add($sectionName, $this->testName, $msg, 0);
         }
+        // var_dump($msg);
         // Clean up
         fclose($handle) or print "Could not close file: compile.log\n";
         return $tr->getProperty("compiles"); // If it compiles, it passed.
