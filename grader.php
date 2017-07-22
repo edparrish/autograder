@@ -15,7 +15,7 @@ require_once ROOT_DIR.'/testcase.php';
 define("ERROUT", ROOT_DIR.'/libs/errout.exe');
 define("DEFAULT_LOG", "grade.log");
 define("SUMMARY_LOG", "summary.log");
-define("DEBUG", "false"); // set true for debug statements otherwise false
+if (!defined("DEBUG")) define("DEBUG", false); // true to echo debug statements otherwise false
 
 /**
     Runs tests on each student and creates a grade log.
@@ -264,6 +264,25 @@ class Grader {
     }
 
     /**
+    * Loads a CSV (comma-separated-variable) file into the database.
+    *
+    * @param $csvFileName The file to load.
+    * @param $tableName The table name to load the data into.
+    * @param $eraseData Set true to remove table and all data prior to loading.
+    * @return true if the load was successful, otherwise false.
+    */
+    function loadCSV($csvFileName, $tableName, $eraseData=true) {
+        $db = new DB();
+        if ($eraseData) {
+            $sql = "DROP TABLE IF EXISTS $tableName";
+            $db->query($sql);
+        }
+        $end = $db->loadCSV($csvFileName, $tableName);
+        return $end;
+    }
+
+
+    /**
         Load a CodeLab roster CSV file into a database table. Allows
         adjustment of the database after loading because students may use
         nicknames, etc.
@@ -274,10 +293,7 @@ class Grader {
                database table after loading.
      */
     function loadCodeLab($csvFileName, $tableName, $sqlFile="") {
-        $db = new DB();
-        $sql = "DROP TABLE IF EXISTS $tableName";
-        $db->query($sql);
-        $db->loadCSV($csvFileName, $tableName);
+        $this->loadCSV($csvFileName, $tableName);
         if ($sqlFile) {
             if (!file_exists($sqlFile)) {
                 die("Error: $sqlFile does not exist (aborting)\n");

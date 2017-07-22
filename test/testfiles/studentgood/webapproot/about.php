@@ -7,6 +7,7 @@
 *
 * @author  Ed Parrish
 * @version 1.1 10/09/05
+* @version 1.2 07/22/17
 */
 ?>
 <html>
@@ -25,25 +26,27 @@
 <?php
 require_once "includes/dbconvars.php";
 
-$dbCnx = mysql_connect($dbhost, $dbuser, $dbpwd)
-    or die("Could not connect");
-mysql_select_db($dbname, $dbCnx)
-    or die("Could not select db");
+$dbCnx = mysqli_connect($dbhost, $dbuser, $dbpwd, $dbname)
+    or die("Could not connect to $dbname");
 
-$result = mysql_query("SELECT * FROM customers")
+$result = mysqli_query($dbCnx, "SELECT * FROM customers")
     or die("Invalid query");
 
 print "<p><table border>\n";
 print "<tr><td>Last Name</td><td>";
-print mysql_result($result, 0, "Lname");
+mysqli_data_seek($result, 0);
+$row = mysqli_fetch_assoc($result);
+print $row['LName'];
 print "</td></tr>\n<td>First Name</td><td>";
-print mysql_result($result, 0, "FName");
+print $row['FName'];
 print "</td></tr>\n<td>Phone</td><td>";
-print mysql_result($result, 1, "Phone");
+mysqli_data_seek($result, 1);
+$row = mysqli_fetch_assoc($result);
+print $row['Phone'];
 print "</td></tr>\n</table>\n";
 
-mysql_free_result($result);
-mysql_close($dbCnx);
+mysqli_free_result($result);
+mysqli_close($dbCnx);
 ?>
 </body>
 </html>

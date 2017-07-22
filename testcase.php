@@ -142,7 +142,7 @@ class TestCodeLab extends TestCase {
             ";
         $result = $db->query($sql);
         // If people use a short name
-        if (mysql_num_rows($result) == 0) {
+        if ($result->num_rows === 0) {
             $sql = "
                 SELECT * FROM $tableName
                     WHERE LastName='$lastName'
@@ -152,14 +152,14 @@ class TestCodeLab extends TestCase {
         }
         // Missing data
         $missingCodeLab = 0;
-        if (mysql_num_rows($result) === 0) {
+        if ($result->num_rows === 0) {
             echo "TestCodeLab: could not find student data\n";
             $missingCodeLab = 1;
         }
         // Need human intervention
-        if (mysql_num_rows($result) > 1) {
+        if ($result->num_rows > 1) {
             echo "\nTestCodeLab: more than 1 row found in $tableName\n";
-            while ($row = mysql_fetch_assoc($result)) {
+            while ($row = mysqli_fetch_assoc($result)) {
                 foreach ($row as $field) {
                     echo "$field\n";
                 }
@@ -171,12 +171,12 @@ class TestCodeLab extends TestCase {
         $correctLate = 0;
         $incorrect = 0;
         $prefix = "0";
-        $row = mysql_fetch_assoc($result);
+        $row = mysqli_fetch_assoc($result);
         if ($row === false) {
             // No student data but can count number of exercises
             $sql = "DESCRIBE $tableName";
             $result = $db->query($sql);
-            while ($row = mysql_fetch_assoc($result)) {
+            while ($row = mysqli_fetch_assoc($result)) {
                 $field = trim($row["Field"]);
                 if (strpos($field, $prefix) === 0) {
                     $totalProblems++;
@@ -1051,25 +1051,24 @@ class TestLoadDB extends TestCase {
         @param $sectionName The section name for each TestResult.
         @return true if the database loaded without errors. Warnings will not
         cause this test to fail.
+        NTR: update to use DB class.
      */
     function runTest(&$tr, $sectionName) {
         $errCount = 0;
         // Open log file and write header
-        if (!$handle = fopen($this->log, 'w')) die("TestLoadDB open $this->log");
+        if (!$handle = fopen($this->log, 'w')) die("TestLoadDB cannot open $this->log");
         fwrite($handle, "*DB Load Results*\n");
         // Drop all the tables from the 'test' db
         require ROOT_DIR.'/includes/dbconvars.php';
-        $dbCnx = mysql_connect($dbhost, $dbuser, $dbpwd)
-            or die("Could not connect to mysql");
-        mysql_select_db($dbname, $dbCnx)
-            or die("Could not select db: $dbname");
+        $dbCnx = mysqli_connect($dbhost, $dbuser, $dbpwd, $dbname)
+            or die("Could not connect to mysql database $dbname");
         $sql = "SHOW TABLES FROM $dbname";
-        $result = mysql_query($sql);
-        while ($row = mysql_fetch_row($result)) {
+        $result = mysqli_query($dbCnx, $sql);
+        while ($row = mysqli_fetch_row($result)) {
             $table = $row[0];
-            mysql_query("DROP TABLE $table");
+            mysqli_query($dbCnx, "DROP TABLE $table");
         }
-        mysql_free_result($result);
+        mysqli_free_result($result);
         $file = $this->dbFile;
         if (!$file) {
             $msg = "No SQL files to load";
@@ -1112,8 +1111,8 @@ class TestLoadDB extends TestCase {
                 $errCount++;
             }
         }
-        $result = mysql_query("SHOW TABLES FROM $dbname");
-        $numTables = mysql_num_rows($result);
+        $result = mysqli_query($dbCnx, "SHOW TABLES FROM $dbname");
+        $numTables = mysqli_num_rows($result);
         if ($numTables == 0) {
             $errCount++;
             fwrite($handle, "No tables loaded into database\n");
