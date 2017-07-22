@@ -1030,7 +1030,6 @@ class TestJavaUnit extends TestCase {
     Loads a MySQL database from a single file and records errors and warnings
     in the test result list.
  */
-// NTR: does not load Mac text files -- strip out \r's
 class TestLoadDB extends TestCase {
     var $dbFile;
     var $log;

@@ -365,7 +365,8 @@ class GradeRunner extends Grader {
         assert('$this->getProperty("compiles") === false');
         $this->resetTestResults();
         // This should pass if a syntactically correct Java file is present
-        $this->pass(new TestCompileJava(), 4, "No errors during compile");
+        $this->fail(new TestCompileJava(), -4,
+            "Did not compile--code must compile for a good score");
         $compiles = $this->getProperty("compiles");
         assert('$compiles !== NULL');
         $this->report(new CompileEvaluator(0, 4), "Java Compilation Score (4):");
