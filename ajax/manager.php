@@ -11,8 +11,8 @@ if ($_POST['do']=='getSelect') {
     $cid = $_POST['cid'];
     getAssignments($cid);
 } else if ($_POST['do']=='exec') {
-    $filePath = $_POST['path'];
-    execScript($filePath);
+    $path = $_POST['path'];
+    execScript($path);
 }
 
 function courseSelect() {
@@ -95,24 +95,26 @@ echo <<<EOD
 EOD;
 }
 
-function execScript($filePath) {
-    echo "Script: $filePath\n";
-    if (!file_exists($filePath)) {
+function execScript($path) {
+    $path = str_replace('\\', '/', $path);
+    $path = preg_replace("/C:\/fakepath\//i", "", $path);
+    echo "Script: $path\n";
+    if (!file_exists($path)) {
       echo "Script file does not exist!\nVerify Script location path matches selected file.\n";
       return; // ????? No function to return from
     }
     //Assume good script?
-    if (substr($filePath, -4) === ".php") {
+    if (substr($path, -4) === ".php") {
         // Execute PHP scripts
-        $dir = dirname($filePath);
-        $file = basename($filePath);
+        $dir = dirname($path);
+        $file = basename($path);
         $cwd = getcwd();
-        $cmd = "/xampp/php/php.exe $filePath";
+        $cmd = "php $path";
         //echo "Command: $cmd\n";
         $result = passthru($cmd);
     } else {
         // Execute shell scripts
-        $result = passthru($filePath);
+        $result = passthru($path);
     }
     echo "$result\n";
 }

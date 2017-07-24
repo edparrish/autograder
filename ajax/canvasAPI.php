@@ -9,6 +9,7 @@ Cabrillo College would be
 The token is a cryptographically unique string of characters and numbers you
 must generate in Canvas. To generate one, login to Canvas, go to
 "Accounts" and "Settings" and click on the "New Access Token" button.
+see: https://community.canvaslms.com/docs/DOC-10806
 
 Windows needs an SSL CA cert from: https://curl.haxx.se/docs/caextract.html
 To update, download cacert.pem from the page and replace the file in folder ajax.
