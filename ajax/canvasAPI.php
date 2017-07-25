@@ -2,32 +2,10 @@
 /**
 This page contains a variety of functions that can be used to access the Canvas API
 
-The canvasDomain is the URL for the Canvas API. For example, the URL for
-Cabrillo College would be
-"https://cabrillo.instructure.com/api/v1".
-
-The token is a cryptographically unique string of characters and numbers you
-must generate in Canvas. To generate one, login to Canvas, go to
-"Accounts" and "Settings" and click on the "New Access Token" button.
-see: https://community.canvaslms.com/docs/DOC-10806
-
-Windows needs an SSL CA cert from: https://curl.haxx.se/docs/caextract.html
-To update, download cacert.pem from the page and replace the file in folder ajax.
-
-To display the correct date and time, update the TIMEZONE setting. For timezones see:
-http://php.net/manual/en/timezones.php
-
-@author Kenneth Larsen from http s://community.canvaslms.com/thread/2681 on 8/2016.
+@author Kenneth Larsen from https://community.canvaslms.com/thread/2681 on 8/2016.
 @author Ed Parrish changes and additions
 */
-// Define the timezone for manager.php; @see: http://php.net/manual/en/timezones.php
-define("TIMEZONE", "America/Los_Angeles");
-// Define the path to the SSL CA certificate
-define("CACERT_PATH", realpath("./cacert.pem"));
-// Set the following to your college domain.
-$canvasDomain = 'your_college.instructure.com';
-// Generate the token in Canvas and assign it here.
-$token = 'put token here';
+require_once 'canvasAPI-config.php';
 
 // This is the header containing the authorization token from Canvas
 $tokenHeader = array("Authorization: Bearer ".$token);
