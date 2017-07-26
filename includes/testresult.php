@@ -20,6 +20,9 @@ class TestResult {
         Adds messages to the test result list.
 
         @param $sectionName The section name for the test result.
+        @param $testName The test name providing the test result.
+        @param $msg The message to add to the list.
+        @param $value The point value towards the score.
      */
     function add($sectionName, $testName, $msg = "", $value = 0) {
         //if (!$msg) $msg = "Completed $testName";
