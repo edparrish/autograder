@@ -13,10 +13,16 @@
     //Renames folders based on student names read from a file.
 
     @author Edward Parrish
-    @version 1 2/15/16
+    @version 1.0 06/19/2016
+    @version 1.1 07/29/2017 Add glob delete list.
 */
 define("NAME_FILE", "../studentnames.csv");
 
+/**
+    Make folders for each student from downloaded Canvas files.
+
+    @param $testDir The directory with download files where folders are made.
+*/
 function makeFolders($testDir) {
     echo "Making folders for each student in $testDir\n";
     $studentNames = readStudentNames(NAME_FILE);
@@ -148,30 +154,31 @@ function getFileExtension($fileName) {
     return substr(strrchr($fileName, '.'), 1);
 }
 
-function showUsage() {
+function showFolderMakerUsage() {
 ?>
 This script makes folders for each student and places their files
 into those folders.
 
   Usage:
-  <?php echo "$argv[0] path\to\test\directory"; ?>
+  <?php echo "php foldermaker.php path/to/test/directory"; ?>
 
-  <option> path\to\test\directory
-  With the --help, -help, -h, or -? options, you can get this help.
+  <option> path/to/test/directory
+  With the -h, or -? options, you can get this help.
 
 <?php
   exit(1);
 }
 
 // Following handles args
-if ($argc == 2) {
-  $testDir = $argv[1];
-} else if (defined('TEST_DIR')) {
-  $testDir = TEST_DIR;
+if ($argc == 1) {
+    // Code is included in another script -- do nothing
+} else if ($argc == 2 && $argv[1] == "-h" || $argv[1] == "-?") {
+    showFolderMakerUsage();
+} else if ($argc == 2) {
+    // Command line mode
+    $testDir = $argv[1];
+    makeFolders($testDir);
 } else {
-  showUsage();
+    showFolderMakerUsage();
 }
-
-// Call the function
-makeFolders($testDir);
 ?>
