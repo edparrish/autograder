@@ -11,6 +11,8 @@ require_once ROOT_DIR.'/includes/readme.php';
 require_once ROOT_DIR.'/includes/testresult.php';
 require_once ROOT_DIR.'/includes/util.php';
 require_once ROOT_DIR.'/testcase.php';
+require_once ROOT_DIR.'/ajax/canvasdownload.php';
+require_once ROOT_DIR.'/ajax/canvasputgrade.php';
 
 define("ERROUT", ROOT_DIR.'/libs/errout.exe');
 define("DEFAULT_LOG", "grade.log");
@@ -342,6 +344,19 @@ class Grader {
     function writeGradeLog($message, $condition = true) {
         if ($condition) {
             fwrite($this->gradeLogHandle, $message);
+        }
+    }
+
+    /**
+        Adds a message to the TestReult list.
+
+        @param $msg The message to add when the condition is true.
+        @param $value The value to add when the condition is true.
+        @param $condition Set true to add the message; otherwise false.
+     */
+    function addTestItem($msg, $value = 0, $condition = true) {
+        if ($condition) {
+            $this->results->add($this->sectionName, 'manual', $msg, $value);
         }
     }
 
@@ -711,11 +726,10 @@ class Grader {
         $percentage = round($this->score / $maxScore * 100);
         $overallComment = $this->commentFromPercentage($percentage, $comments);
         $msg = "Total Score: $this->score";
-        if ($showPercent) {
-            $msg .= " ($percentage%)";
-        }
-        if ($showMax) $msg .= " out of $maxScore";
-        $msg .= "\n\n$overallComment\n";
+        if ($showMax) $msg .= " of $maxScore";
+        if ($showPercent) $msg .= " ($percentage%)";
+        $msg .= "\n";
+        if ($comments) $msg .= "\n$overallComment\n";
         fwrite($this->gradeLogHandle, $msg);
         return $percentage;
     }
