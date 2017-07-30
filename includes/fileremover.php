@@ -5,8 +5,7 @@
     @author Edward Parrish
     @version 1.0 07/29/2017
 */
-require_once 'includes/util.php';
-
+require_once 'util.php';
 
 /**
     Remove files from each student folder in the testDir.
@@ -31,16 +30,17 @@ function showFileRemoverUsage() {
 ?>
 This script deletes unwanted files from student folders.
 
-  Usage:
-  <?php echo "php fileremover.php path/to/directory fileGlobs"; ?>
+Usage:
+php fileremover.php path/to/directory fileGlobs...
 
-  <option> path/to/directory
-  With the -h, or -? options, you can get this help.
+<option> path/to/directory: path to directory with files to remove.
+<option> fileGlobs: glob patterns of files to remove.
+         Can specify multiple globs separated by spaces.
+With the -h, or -? options, you can get this help.
 
 <?php
   exit(1);
 }
-
 
 // Following handles args
 if ($argc == 1) {
@@ -57,3 +57,9 @@ if ($argc == 1) {
     removeFiles($testDir, $delGlobList);
 }
 ?>
+
+// Uncomment following line to run unit tests
+//testRemoveFiles();
+function testRemoveFiles() {
+
+}
