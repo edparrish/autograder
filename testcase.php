@@ -614,7 +614,6 @@ class TestCondition extends TestCase {
         @param $condition A value of true or false.
         @param $msg The message to add when the condition is true.
         @param $value The value to add when the condition is true.
-        NTR: remove $msg and $value?
      */
     function TestCondition($condition, $msg = "", $value = 0) {
         $this->testName = get_class();
