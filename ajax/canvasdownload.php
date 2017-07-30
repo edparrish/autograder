@@ -6,11 +6,12 @@
     which is the manual download for assignments.
     zip name style: studentName_userId_fileId_attachmentDisplayname
     Examples:
-    asn: thachandrew_15191_154796_Snow Chain Manager-1.zip
-    asn late: chaffinkage_late_11156_154924_Sampler-1.zip
+    asn: studentone_15191_154796_assignment-1.zip
+    asn late: studenttwo_late_11156_154924_project.zip
 
     @author Edward Parrish
     @version 1.0 06/27/16
+    @version 1.1 07/28/17 Update cert path
 */
 require_once 'canvasAPI.php';
 
@@ -28,8 +29,8 @@ require_once 'canvasAPI.php';
 function downloadAssignments($cid, $asnId, $targetFolder, $all) {
     echo "Downloading files from course $cid and assignment $asnId to folder $targetFolder...\n";
     if (substr($targetFolder, -1) !== '/') $targetFolder .= '/';
-    $studentList = listStudentUsers($cid, true);
     //startCURLLogging();
+    $studentList = listStudentUsers($cid, true);
     foreach($studentList as $student) {
         $stuName = str_replace(',', '', $student->sortable_name);
         $stuName = str_replace('-', '', $stuName);
@@ -87,10 +88,10 @@ function downloadFile($url, $filePath) {
     set_time_limit(0); // infinity
     $fp = fopen ($filePath, 'w+');
     $ch = curl_init($url);
-    //curl_setopt($ch, CURLOPT_VERBOSE, true); //output verbose information
-    curl_setopt($ch, CURLOPT_CAINFO, "/courses/tools/autograde5/ajax/cacert.pem"); //Set cert for windoze
+    //curl_setopt($ch, CURLOPT_VERBOSE, true); // output verbose information
+    curl_setopt($ch, CURLOPT_CAINFO, CACERT_PATH); // Set cert
     curl_setopt($ch, CURLOPT_FILE, $fp);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); //follow redirects
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // follow redirects
     curl_setopt($ch, CURLOPT_TIMEOUT, 120);
     curl_exec($ch);
     if(curl_errno($ch)) {
@@ -100,18 +101,18 @@ function downloadFile($url, $filePath) {
     fclose($fp);
 }
 
-function showUsage($argv) {
+function showCanvasDownloadUsage($argv) {
 ?>
-This script makes folders for each student and places their files
-into those folders.
+This script downloads files for each student from Canvas.
 
-  Usage:
-  <?php echo "php -f $argv[0] courseId asnId targetFolder"; ?>
+Usage:
+<?php echo "php canvasdownload.php courseId asnId targetFolder all"; ?>
 
-  <option> courseId: The course number.
-  <option> asnId: The assignment number.
-  <option> targetFolder: The destination folder of the downloaded files.
-  With the --help, -help, -h, or -? options, you get a list of options
+<option> courseId: The course number.
+<option> asnId: The assignment number.
+<option> targetFolder: The destination folder of the downloaded files.
+<option> all: Set true to download all assignments; false for only ungraded.
+With the --help, -help, -h, or -? options, you get these instructions.
 
 <?php
   exit(1);
@@ -119,27 +120,28 @@ into those folders.
 
 // Following invokes script in various ways
 if ($_POST['do']=='download') {
-  // Web mode
-  $cid = $_POST['cid'];
-  $asnId = $_POST['asnid'];
-  $targetFolder = $_POST['folder'];
-  $all = true ? $_POST['all'] == "true" : false;
-  downloadAssignments($cid, $asnId, $targetFolder, $all);
+    // Browser mode
+    $cid = $_POST['cid'];
+    $asnId = $_POST['asnid'];
+    $targetFolder = $_POST['folder'];
+    $all = true ? $_POST['all'] == "true" : false;
+    downloadAssignments($cid, $asnId, $targetFolder, $all);
 } else if ($argc == 5) {
-  // Command line mode
-  $cid = $argv[1];
-  $asnId = $argv[2];
-  $targetFolder = $argv[3];
-  $all = $argv[4];
-  downloadAssignments($cid, $asnId, $targetFolder, $all);
+    // Command line mode
+    $cid = $argv[1];
+    $asnId = $argv[2];
+    $targetFolder = $argv[3];
+    $all = $argv[4];
+    downloadAssignments($cid, $asnId, $targetFolder, $all);
 } else if ($argc == 1) {
-  // TextPad mode with hard-coded parameters
-  $cid = 3113;
-  $asnId = 27803;
-  $targetFolder = '/Courses/cs11/homework/A01';
-  $all = true;
-  downloadAssignments($cid, $asnId, $targetFolder, $all);
+    // File is included -- do nothing
+    // Also can be test mode with hard-coded parameters:
+    //$cid = 3113;
+    //$asnId = 27803;
+    //$targetFolder = '/Courses/cs11/homework/A01';
+    //$all = true;
+    //downloadAssignments($cid, $asnId, $targetFolder, $all);
 } else if (isset($argc)) {
-  showUsage($argv);
+    showCanvasDownloadUsage($argv);
 }
 ?>
