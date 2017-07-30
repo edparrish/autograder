@@ -64,13 +64,16 @@ function uploadGrade($cid, $asnId, $sourceFolder, $gradeFile, $type="both") {
 */
 function putFeedback($cid, $asnId, $stuId, $pathName, $type) {
     $contents = file_get_contents($pathName);
+    // Encode problem characters
+    $contents = str_replace('%', '%25', $contents);
+    $contents = str_replace('&', '%26', $contents);
     $score = getScore($contents); // posted_grade
     $apiUrl = 'courses/'.$cid.'/assignments/'.$asnId.'/submissions/'.$stuId;
     $data = "";
     if ($type != "feedback") $data = "submission[posted_grade]=$score";
     if ($type == "both") $data .= "&";
     if ($type != "score") $data .= "comment[text_comment]=$contents";
-    $response = curlPut($apiUrl, $data);
+    $response = curlPut($apiUrl, $data, true);
     if ($response == false) {
         $pattern = "/\bName:\s*([\w ]+)/";
         preg_match($pattern, $contents, $matches);
@@ -91,61 +94,54 @@ function getScore($contents) {
     return $score;
 }
 
-/*
-function showUsage($argv) {
+
+function showCanvasPutgradeUsage($argv) {
 ?>
 This script makes folders for each student and places their files
 into those folders.
 
-  Usage:
-  <?php echo "php -f $argv[0] courseId asnId targetFolder gradelog"; ?>
+Usage:
+<?php echo "php canvasputgrade.php courseId asnId targetFolder gradelog type";?>
 
-  <option> courseId: The course number.
-  <option> asnId: The assignment number.
-  <option> targetFolder: The destination folder of the downloaded files.
-  <option> gradelog: Name of the log file with grade and grading comments.
-  With the --help, -help, -h, or -? options, you get a list of options
+<option> courseId: The course ID number.
+<option> asnId: The assignment ID number.
+<option> targetFolder: The destination folder of the downloaded files.
+<option> gradelog: Name of the log file with grade and grading comments.
+<option> type: Type of upload: feedback, score, both; defaults to both
+With the --help, -help, -h, or -? options, you get these instructions.
 
 <?php
   exit(1);
 }
-*/
 
 // Following invokes script in various ways
 if ($_POST['do']=='upload') {
-  // Web mode
-  $cid = $_POST['cid'];
-  $asnId = $_POST['asnid'];
-  $sourceFolder = $_POST['folder'];
-  $gradeLog = $_POST['log'];
-  $type = $_POST['type'];
-  uploadGrade($cid, $asnId, $sourceFolder, $gradeLog, $type);
+    // Browser mode
+    $cid = $_POST['cid'];
+    $asnId = $_POST['asnid'];
+    $sourceFolder = $_POST['folder'];
+    $gradeLog = $_POST['log'];
+    $type = $_POST['type'];
+    uploadGrade($cid, $asnId, $sourceFolder, $gradeLog, $type);
 } else if ($argc == 5 || $argc == 6) {
-  // Command line mode
-  $cid = $argv[1];
-  $asnId = $argv[2];
-  $targetFolder = $argv[3];
-  $gradeFile = $argv[4];
-  $type = "both";
-  if ($argc == 6) $type = $argv[5];
-  uploadGrade($cid, $asnId, $sourceFolder, $gradeLog, $type);
+    // Command line mode
+    $cid = $argv[1];
+    $asnId = $argv[2];
+    $targetFolder = $argv[3];
+    $gradeFile = $argv[4];
+    $type = "both";
+    if ($argc == 6) $type = $argv[5];
+    uploadGrade($cid, $asnId, $sourceFolder, $gradeLog, $type);
 } else if ($argc == 1) {
-  // Test mode with hard-coded parameters
-  $cid = 3113;
-  $asnId = 27803;
-  $sourceFolder = '/Courses/cs11/homework/A01';
-  $gradeFile = "grade.log";
-  $type = "both";
-  uploadGrade($cid, $asnId, $sourceFolder, $gradeFile, $type);
+    // Invoked when included -- do nothing
+    // Also can be test mode with hard-coded parameters:
+    //$cid = 3113;
+    //$asnId = 27803;
+    //$sourceFolder = '/Courses/cs11/homework/A01';
+    //$gradeFile = "grade.log";
+    //$type = "both";
+    //uploadGrade($cid, $asnId, $sourceFolder, $gradeFile, $type);
 } else if (isset($argc)) {
-  //showUsage($argv);
+    showCanvasPutgradeUsage($argv);
 }
-/*
-Call the function for test and debug
-$cid = 3113;
-$asnId = 27803;
-$sourceFolder = '/Courses/cs11/homework/A01';
-$gradeFile = "grade.log";
-uploadGrade($cid, $asnId, $sourceFolder, $gradeFile);
-*/
 ?>
