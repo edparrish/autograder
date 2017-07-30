@@ -149,14 +149,17 @@ function curlPost($url, $data) {
 /**
 For API calls requiring PUT like those editing an existing assignment.
 
-@param $url the unique API part of the URL like: courses/:course_id/assignments/:id
+@param $url Unique API part of the URL like: courses/:course_id/assignments/:id
 @param $data the data to update.
+@param $quiet Set true to return PUT data; false to output to stdout directly.
+@see: http://php.net/manual/en/function.curl-setopt.php
 */
-function curlPut($url, $data) {
+function curlPut($url, $data, $quiet=false) {
     global $tokenHeader, $canvasDomain, $logfp;
     $ch = curl_init('https://'.$canvasDomain.'/api/v1/'.$url);
     curl_setopt ($ch, CURLOPT_HTTPHEADER, $tokenHeader);
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, $quiet); // ELP
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
     curl_setopt($ch, CURLOPT_CAINFO, CACERT_PATH); //Set cert for windoze ELP
     if (isset($logfp)) { // ELP Output verbose info to file
