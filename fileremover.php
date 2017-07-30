@@ -1,6 +1,6 @@
 <?php
 /**
-    Utility file to remove unwanted files from student folders.
+    Utility script to remove unwanted files from student folders.
 
     @author Edward Parrish
     @version 1.0 07/29/2017

@@ -8,13 +8,11 @@
 
     Skips files when names are not in the Canvas download format.
     Unzips zip, 7z and gfar files recursively.
-    --preparer does the same thing, need to extract but not recursively?
     Removes __MACOSX folders which are a potential source of problems.
-    //Renames folders based on student names read from a file.
+    Renames folders based on student names read from a file.
 
     @author Edward Parrish
     @version 1.0 06/19/2016
-    @version 1.1 07/29/2017 Add glob delete list.
 */
 define("NAME_FILE", "../studentnames.csv");
 
