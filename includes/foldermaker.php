@@ -155,18 +155,23 @@ function getFileExtension($fileName) {
 
 // Uncomment function call in args below to run unit tests
 function testMakeFolders() {
+    error_reporting(E_ALL | E_STRICT); // report all problems
     require_once 'util.php';
-    // Create file in current folder matching Canvas pattern
+    $pass = true; // optimistic result
+    echo "...creating file in current folder matching Canvas pattern\n";
     $filename = "studenttest_30473_511771_test.txt";
     file_put_contents($filename, "testing makeFolders\n");
-    // Run makeFolders with current directory
+    echo "...testing makeFolders()\n";
     makeFolders(__DIR__);
     // Verify new folder and files exist
-    assert(file_exists('studenttest'));
-    assert(file_exists('studenttest/SubmissionComments.txt'));
-    assert(file_exists('studenttest/test.txt'));
-    // Remove new folder
-    //deleteFolder(__DIR__/studenttest);
+    $pass &= assert(file_exists('studenttest'));
+    $pass &= assert(file_exists('studenttest/SubmissionComments.txt'));
+    $pass &= assert(file_exists('studenttest/test.txt'));
+    echo "...removing new studenttest folder\n";
+    deleteFolder("studenttest");
+    $pass &= assert(!file_exists('studenttest'));
+    echo "...unit test completed and ";
+    echo $pass ? "passed.\n" : "failed.\n";
 }
 
 function showFolderMakerUsage() {
@@ -187,7 +192,7 @@ With the -h, or -? options, you can get this help.
 // Following handles args
 if ($argc == 1) {
     // Code is included in another script -- do nothing
-    testMakeFolders();
+    testMakeFolders(); // Uncomment to unit test, recomment to use
 } else if ($argc == 2 && $argv[1] == "-h" || $argv[1] == "-?") {
     showFolderMakerUsage();
 } else if ($argc == 2) {

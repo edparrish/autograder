@@ -11,7 +11,7 @@ require_once 'util.php';
     Remove files from each student folder in the testDir.
 
     @param $testDir The directory with student folders.
-    @param $delGlobList The array of file globs to delete.
+    @param $delGlobList An array of file globs to delete.
 */
 function removeFiles($testDir, $delGlobList = array()) {
     $it = new DirectoryIterator($testDir);
@@ -24,6 +24,25 @@ function removeFiles($testDir, $delGlobList = array()) {
             }
         }
     }
+}
+
+// Uncomment function call in args below to run unit tests
+function testRemoveFiles() {
+    error_reporting(E_ALL | E_STRICT); // report all problems
+    $pass = true; // optimistic result
+    echo "...creating studenttest folder\n";
+    mkdir("studenttest");
+    echo "...creating file in studenttest folder\n";
+    $filename = "studenttest_30473_511771_test.txt";
+    file_put_contents("studenttest/$filename", "testing removeFiles\n");
+    $pass &= assert(file_exists("studenttest/$filename"));
+    echo "...testing removeFiles()\n";
+    removeFiles(__DIR__, array($filename));
+    $pass &= assert(!file_exists("studenttest/$filename"));
+    rmdir("studenttest");
+    $pass &= assert(!file_exists("studenttest"));
+    echo "...unit test completed and ";
+    echo $pass ? "passed.\n" : "failed.\n";
 }
 
 function showFileRemoverUsage() {
@@ -45,6 +64,7 @@ With the -h, or -? options, you can get this help.
 // Following handles args
 if ($argc == 1) {
     // Code is included in another script -- do nothing
+    //testRemoveFiles(); // Uncomment line to unit test, comment line to use
 } else if ($argc == 2 && $argv[1] == "-h" || $argv[1] == "-?") {
     showFileRemoverUsage();
 } else if ($argc >= 2) {
@@ -57,9 +77,3 @@ if ($argc == 1) {
     removeFiles($testDir, $delGlobList);
 }
 ?>
-
-// Uncomment following line to run unit tests
-//testRemoveFiles();
-function testRemoveFiles() {
-
-}
