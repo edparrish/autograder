@@ -23,7 +23,7 @@ function copyFile($src, $dest) {
   Returns true if files specified by $glob exist, otherwise false.
 
   @param $glob The file glob to find.
-  @param $recFlag Set true for recursive; defaults to false.
+  @param $recFlag Set true to recursively descend into subfolders; defaults to false.
   @return true if the file exists, otherwise false.
  */
 function fileExists($glob, $recFlag = false) {
@@ -78,6 +78,38 @@ function deleteGlobRec($pattern, $folder) {
         deleteGlobRec($pattern, $dir);
     }
     chdir($startDir);
+}
+
+/*
+  Delete a folder and all its files and subfolders in the path.
+
+  @see http://stackoverflow.com/questions/1334398/how-to-delete-a-folder-with-contents-using-php
+*/
+function deleteFolder($path) {
+    if (is_dir($path) === true) {
+        $files = array_diff(scandir($path), array('.', '..'));
+        foreach ($files as $file) {
+            deleteFolder(realpath($path) . '/' . $file);
+        }
+        return rmdir($path);
+    } else if (is_file($path) === true) {
+        return unlink($path);
+    }
+    return false;
+}
+
+/**
+    Remove every folder and all its files and subfolders in the testDir.
+
+    @param $testDir The directory with student folders.
+*/
+function deleteAllFolders($testDir) {
+    $it = new DirectoryIterator($testDir);
+    foreach ($it as $fileinfo) {
+        if ($fileinfo->isDir() && !$fileinfo->isDot()) {
+            deleteFolder($fileinfo->getPathname());
+        }
+    }
 }
 
 /**
@@ -159,11 +191,32 @@ function testUtils() {
     $filesRec = globr($pattern, GLOB_BRACE, $startDir);
     $pass &= assert('is_array($filesRec)');
     $pass &= assert('count($filesRec) >= count($files)');
+    echo "...testing deleteFolder()\n";
+    $folder = "studenttest";
+    mkdir($folder);
+    $filename = "studenttest_30473_511771_test.txt";
+    file_put_contents("$folder/$filename", "testing deleteFolder\n");
+    $pass &= assert(file_exists("$folder/$filename"));
+    deleteFolder($folder);
+    $pass &= assert(!file_exists("$folder/$filename"));
+    $pass &= assert(!file_exists($folder));
     echo "...testing deleteGlobRec()\n";
     copy('util.php', '../test/util.bak');
     deleteGlobRec('util.bak', '../test/');
     $files = globr('util.bak');
     $pass &= assert('count($files) === 0');
+    echo "...testing deleteAllFolders\n";
+    $folder = "studenttest";
+    $folder2 = "studenttest2";
+    mkdir($folder);
+    mkdir($folder2);
+    $filename = "studenttest_30473_511771_test.txt";
+    file_put_contents("$folder/$filename", "testing deleteFolders\n");
+    $pass &= assert(file_exists("$folder/$filename"));
+    deleteAllFolders(__DIR__);
+    $pass &= assert(!file_exists("$folder/$filename"));
+    $pass &= assert(!file_exists($folder));
+    $pass &= assert(!file_exists($folder2));
     echo "...testing shell_exec_timed and kill\n";
     $ts = time();
     // Compile testinf.cpp with C++ to test following line.
