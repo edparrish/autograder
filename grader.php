@@ -67,6 +67,7 @@ class Grader {
     function runTest() {
         $this->startTest();
         $this->dit = $this->dl->iterator();
+        echo "Grading files in ".$this->dl->getPath().".\n";
         while ($this->dit->hasNext()) {
             $this->dir = $this->dit->next();
             $this->preTest();
