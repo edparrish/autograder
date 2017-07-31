@@ -27,7 +27,7 @@ require_once 'canvasAPI.php';
   @param $all Set true to download all assignments; false for only ungraded.
 */
 function downloadAssignments($cid, $asnId, $targetFolder, $all) {
-    echo "Downloading files from course $cid and assignment $asnId to folder $targetFolder...\n";
+    echo "Downloading from course $cid and asn $asnId to $targetFolder.\n";
     if (substr($targetFolder, -1) !== '/') $targetFolder .= '/';
     //startCURLLogging();
     $studentList = listStudentUsers($cid, true);

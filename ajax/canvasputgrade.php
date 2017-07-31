@@ -23,7 +23,7 @@ require_once 'canvasAPI.php';
   @param $type Type of upload: feedback, score, both
 */
 function uploadGrade($cid, $asnId, $sourceFolder, $gradeFile, $type="both") {
-    echo "Uploading grade to course $cid and assignment $asnId from folder $sourceFolder and file $gradeFile.\n";
+    echo "Posting to course $cid and asn $asnId from $gradeFile files in $sourceFolder.\n";
     if (substr($sourceFolder, -1) !== '/') $sourceFolder .= '/';
     $studentList = listStudentUsers($cid, true);
     chdir($sourceFolder);
