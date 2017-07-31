@@ -15,6 +15,7 @@
     @version 1.0 06/19/2016
     @version 1.1 07/30/2017 Added units test and minor updates.
 */
+require_once 'util.php';
 define("NAME_FILE", "../studentnames.csv");
 
 /**
@@ -65,7 +66,9 @@ function makeFolders($testDir) {
                     $fileName .= "_".$nameList[$i];
                 }
                 $ext = strtolower(getFileExtension($fileName));
-                if (!file_exists($folder)) mkdir($folder);
+                if (!file_exists($folder)) {
+                    mkdir($folder);
+                }
                 copy($entry, "$folder/$fileName");
                 unlink($entry);
                 if ($ext == "zip" || $ext == "7z" || $ext == "gfar") {
@@ -130,24 +133,6 @@ function unzipFolder($folder) {
     chdir($startDir);
 }
 
-/*
-  Delete folder and all files in the folder.
-
-  @see http://stackoverflow.com/questions/1334398/how-to-delete-a-folder-with-contents-using-php
-*/
-function deleteFolder($path) {
-    if (is_dir($path) === true) {
-        $files = array_diff(scandir($path), array('.', '..'));
-        foreach ($files as $file) {
-            deleteFolder(realpath($path) . '/' . $file);
-        }
-        return rmdir($path);
-    } else if (is_file($path) === true) {
-        return unlink($path);
-    }
-    return false;
-}
-
 /* function:  returns a file's extension */
 function getFileExtension($fileName) {
     return substr(strrchr($fileName, '.'), 1);
@@ -192,7 +177,7 @@ With the -h, or -? options, you can get this help.
 // Following handles args
 if ($argc == 1) {
     // Code is included in another script -- do nothing
-    testMakeFolders(); // Uncomment to unit test, recomment to use
+    //testMakeFolders(); // Uncomment to unit test, recomment to use
 } else if ($argc == 2 && $argv[1] == "-h" || $argv[1] == "-?") {
     showFolderMakerUsage();
 } else if ($argc == 2) {
