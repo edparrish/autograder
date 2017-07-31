@@ -140,35 +140,42 @@ function kill($pid) {
       : exec("kill -9 $pid");             // unix
 }
 
-// Uncomment following line to run unit tests
+// Uncomment following line to run unit tests; recomment to use
 //testUtils();
 function testUtils() {
-    echo "Testing fileExists\n";
-    assert(fileExists('util.php'));
-    assert(!fileExists('nonesuch.42'));
-    echo "Testing copyFile\n";
+    error_reporting(E_ALL | E_STRICT); // report all problems
+    $pass = true; // optimistic result
+    echo "...testing fileExists\n";
+    $pass &= assert(fileExists('util.php'));
+    $pass &= assert(!fileExists('nonesuch.42'));
+    echo "...testing copyFile\n";
     copyFile("util.php", "bogus.tmp");
-    assert(fileExists('bogus.tmp'));
+    $pass &= assert(fileExists('bogus.tmp'));
     unlink('bogus.tmp');
-    echo "Testing globr()\n";
+    echo "...testing globr()\n";
     $pattern = "*";
     $startDir = ".";
     $files = glob($pattern);
     $filesRec = globr($pattern, GLOB_BRACE, $startDir);
-    assert('is_array($filesRec)');
-    assert('count($filesRec) >= count($files)');
-    echo "Testing deleteGlobRec()\n";
+    $pass &= assert('is_array($filesRec)');
+    $pass &= assert('count($filesRec) >= count($files)');
+    echo "...testing deleteGlobRec()\n";
     copy('util.php', '../test/util.bak');
     deleteGlobRec('util.bak', '../test/');
     $files = globr('util.bak');
-    assert('count($files) === 0');
-    echo "Testing shell_exec_timed and kill\n";
+    $pass &= assert('count($files) === 0');
+    echo "...testing shell_exec_timed and kill\n";
     $ts = time();
-    $output = shell_exec_timed("..\\test\\testfiles\\testinf.exe 2>&1", 3);
-    assert($output !== "");
-    assert(strpos($output, 'Killing process') !== false);
+    // Compile testinf.cpp with C++ to test following line.
+    //$output = shell_exec_timed("../test/testfiles/testinf.exe 2>&1", 3);
+    $output = shell_exec_timed("php ../test/testfiles/testinf.php 2>&1", 3);
+    $pass &= assert($output !== "");
+    $result = assert(strpos($output, 'Killing process') !== false);
+    if (!$result) echo "output=$output\n";
+    $pass &= $result;
     $ts = time() - $ts;
-    assert($ts === 3);
-    echo "...unit test complete\n";
+    $pass &= assert($ts === 3);
+    echo "...unit test completed and ";
+    echo $pass ? "passed.\n" : "failed.\n";
 }
 ?>
