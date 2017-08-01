@@ -1,10 +1,9 @@
 <?php
-include_once("../grader.php");
-// Absolute path to student submissions
+// Simple test of the system after installation.
+require_once("../grader.php");
 define("TEST_DIR", ROOT_DIR."/test/testfiles");
-// Other string constants defined here
 
-$students = null; // for all students
+// Array of students to test; null for all students.
 $students = array("cpp1"); // list student folders to test
 
 class GradeRunner extends Grader {
