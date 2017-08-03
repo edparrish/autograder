@@ -1,13 +1,13 @@
 <?php
-// Test of automatic grading for Canvas.
+// Simple test of automatic grading for Canvas.
 // Three imports required for automatic grading.
 require_once("../grader.php");
 require_once("../includes/foldermaker.php");
 require_once("../includes/fileremover.php");
 // Define required information
 define("TEST_DIR", ROOT_DIR."/test/autofiles"); // path to student test folder
-define("CID", "1234");  // Couse ID read from Autograde Manager
-define("AID", "12345"); // Assignment ID read from Autograde Manager
+define("CID", "7193");  // Couse ID read from Autograde Manager
+define("AID", "76201"); // Assignment ID read from Autograde Manager
 if (!file_exists(TEST_DIR)) mkdir(TEST_DIR); // create TEST_DIR
 
 $students = null;
