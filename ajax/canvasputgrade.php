@@ -115,7 +115,7 @@ With the --help, -help, -h, or -? options, you get these instructions.
 }
 
 // Following invokes script in various ways
-if ($_POST['do']=='upload') {
+if (isset($_POST['do']) && $_POST['do']=='upload') {
     // Browser mode
     $cid = $_POST['cid'];
     $asnId = $_POST['asnid'];
