@@ -6,10 +6,10 @@ The framework was inspired by JUnit and is designed with homework grading in min
 
 Autograder:
 
-    - lets you create grading scripts with simple commands
-    - provides a set of flexible test cases 
-    - allows users to add test cases for specific requirements
-    - interacts with Canvas (or another LMS)
-    - provides for robograding where students promptly get automated feedback
+- lets you create grading scripts with simple commands
+- provides a set of flexible test cases 
+- allows users to add test cases for specific requirements
+- interacts with Canvas (or another LMS)
+- provides for robograding where students promptly get automated feedback
 
 For more information see the [Wiki](https://github.com/edparrish/autograder/wiki).
