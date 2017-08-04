@@ -1,6 +1,6 @@
 <?php
 // Simple test of automatic grading for Canvas.
-// Three imports required for automatic grading.
+// Three imports with absolute paths required for automatic grading.
 require_once("../grader.php");
 require_once("../includes/foldermaker.php");
 require_once("../includes/fileremover.php");
