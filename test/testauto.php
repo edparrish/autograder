@@ -1,6 +1,6 @@
 <?php
 // Simple test of automatic grading for Canvas.
-// Three imports with absolute paths required for automatic grading.
+// Need absolute paths in actual scripts for following three imports.
 require_once("../grader.php");
 require_once("../includes/foldermaker.php");
 require_once("../includes/fileremover.php");
@@ -34,6 +34,7 @@ class GradeRunner extends Grader {
         downloadAssignments(CID, AID, TEST_DIR, false); // false: ungraded only
         makeFolders(TEST_DIR);
         removeFiles(TEST_DIR, array("*.[eE][xX][eE]", "*.o"));
+        //sleep(10);
         parent::startTest(); // make dirlist
     }
 

@@ -47,6 +47,8 @@ class Grader {
     private $firstName; // student's first name
     private $lastName;  // student's last name
     private $reportedName; // name student reported
+    private $testDir; // test directory parameter of constructor
+    private $studentList; // students to grade parameter of constructor
 
     /**
      * Constructor
