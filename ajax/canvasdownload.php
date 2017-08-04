@@ -63,7 +63,7 @@ function downloadStudentFiles($cid, $asnId, $stuId, $stuName, $tgtFlr, $all) {
     //echo "grade=";var_dump($studentAssignments->grade);
     //echo "score=";var_dump($studentAssignments->score);
     if ($all == false && $studentAssignments->grade != NULL) {
-        echo "Already graded assignment for $stuName.\n";
+        //echo "Already graded assignment for $stuName.\n";
         return;
     }
     echo "Downloading file(s) for $stuName.\n";

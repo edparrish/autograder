@@ -76,7 +76,7 @@ function makeFolders($testDir) {
                 }
                 addCommentsFile($folder, $stuName);
             } else /*if ($comp != 0)*/ {
-                echo "Did not move file: $entry\n";
+                //echo "Did not move file: $entry\n";
             }
         }
     }
