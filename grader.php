@@ -52,8 +52,9 @@ class Grader {
      * Constructor
      */
     function Grader($testDir, $students = false, $gradeLogName = null) {
-        $this->dl = new DirList($testDir, $students);
         chdir($testDir) or die("Could not change to directory: $testDir\n");
+        $this->testDir = $testDir;
+        $this->students = $students;
         if ($gradeLogName === null) {
             $this->gradeLogName = DEFAULT_LOG;
         } else {
@@ -79,6 +80,7 @@ class Grader {
 
     // Setup test conditions
     function startTest() {
+        $this->dl = new DirList($this->testDir, $this->students);
         $this->timestamp = time();
         if (file_exists(SUMMARY_LOG)) copy(SUMMARY_LOG, "summary.bak");
         if (!$this->summaryLogHandle = fopen(SUMMARY_LOG, "w")) {
