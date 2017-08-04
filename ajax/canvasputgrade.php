@@ -33,8 +33,8 @@ function uploadGrade($cid, $asnId, $sourceFolder, $gradeFile, $type="both") {
         $folderName = str_replace('-', '', $folderName);
         $folderName = str_replace(' ', '', $folderName);
         $folderName = strtolower($folderName);
-        echo "Uploading from $folderName.\n";
         if (is_dir($folderName)) { // student turned in work
+            echo "Uploading from $folderName.\n";
             $pathName = $folderName.'/'.$gradeFile;
             if (file_exists($pathName)) { // file was graded
                 putFeedback($cid, $asnId, $student->id, $pathName, $type);
@@ -42,7 +42,7 @@ function uploadGrade($cid, $asnId, $sourceFolder, $gradeFile, $type="both") {
                 echo "Error: missing file $gradeFile in folder $folderName\n";
             }
         } else {
-            echo "Missing folder for $folderName.\n";
+            //echo "Missing folder for $folderName.\n";
         }
     }
     //stopCURLLogging();

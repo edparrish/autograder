@@ -56,7 +56,7 @@ function downloadStudentFiles($cid, $asnId, $stuId, $stuName, $tgtFlr, $all) {
     $studentAssignments = curlGet($apiUrl);
     //var_dump($studentAssignments);
     if (!isset($studentAssignments->attachments)) {
-        echo "No student files submitted for $stuName.\n";
+    //    echo "No student files submitted for $stuName.\n";
         return;
     }
     //echo "all=";var_dump($all);
