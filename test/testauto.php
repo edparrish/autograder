@@ -29,12 +29,12 @@ grading if an error is found in an automatic grading script.
 class GradeRunner extends Grader {
     // Setup test environment to run before any grading.
     function startTest() {
-        parent::startTest();
         echo "Deleting all prior folders in ".TEST_DIR.".\n";
         deleteAllFolders(TEST_DIR);
         downloadAssignments(CID, AID, TEST_DIR, false); // false: ungraded only
         makeFolders(TEST_DIR);
         removeFiles(TEST_DIR, array("*.[eE][xX][eE]", "*.o"));
+        parent::startTest(); // make dirlist
     }
 
     // Put the tests here to grade students individually
