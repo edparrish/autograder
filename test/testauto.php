@@ -22,8 +22,8 @@ $students = null;
 
 define("OVERALL_MSG", "
 The above is your probable grade except for manually graded items.
-The instructor reserves the right to adjust scores when manually
-grading if an error is found in an automatic grading script.
+The instructor reserves the right to adjust scores while manually
+grading if an error is found in a robo grading script.
 ");
 
 class GradeRunner extends Grader {
