@@ -6,8 +6,8 @@ require_once("../includes/foldermaker.php");
 require_once("../includes/fileremover.php");
 // Define required information
 define("TEST_DIR", ROOT_DIR."/test/autofiles"); // path to student test folder
-define("CID", "7193");  // Couse ID read from Autograde Manager
-define("AID", "76201"); // Assignment ID read from Autograde Manager
+define("CID", "7193");  // Couse ID from Autograde Manager
+define("AID", "76201"); // Assignment ID from Autograde Manager
 if (!file_exists(TEST_DIR)) mkdir(TEST_DIR); // create TEST_DIR
 
 $students = null;
@@ -31,10 +31,9 @@ class GradeRunner extends Grader {
     function startTest() {
         echo "Deleting all prior folders in ".TEST_DIR.".\n";
         deleteAllFolders(TEST_DIR);
-        downloadAssignments(CID, AID, TEST_DIR, false); // false: ungraded only
+        downloadAssignments(CID, AID, TEST_DIR, false); // false=ungraded only
         makeFolders(TEST_DIR);
         removeFiles(TEST_DIR, array("*.[eE][xX][eE]", "*.o"));
-        //sleep(10);
         parent::startTest(); // make dirlist
     }
 
