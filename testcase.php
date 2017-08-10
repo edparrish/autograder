@@ -1478,8 +1478,10 @@ class TestStyleCPP extends TestCase {
         @return true if the test passes, otherwise returns false.
      */
     function runTest(&$tr, $sectionName) {
+        $numFiles = 0;
         foreach($this->fileList as $fc) {
             if (!$fc->exists()) break; // 11/7/2016
+            $numFiles++;
             $contents = $fc->toString(); // 11/7/2016
             $lineList = $fc->toArray();
             $file = $fc->getName();
@@ -1532,6 +1534,10 @@ class TestStyleCPP extends TestCase {
             if ($this->getProperty('WhitespaceAroundOperator') !== "skip") {
                 $this->whitespaceAroundOperator($strippedLines, $file);
             }
+        }
+        if ($numFiles === 0) {
+            $this->addError("No source code files found");
+            $tr->setProperty("no_files", true);
         }
         //print_r($this->errors); // for debugging
         // Save errors in log file
