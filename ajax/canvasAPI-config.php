@@ -4,7 +4,7 @@ This page contains configuration variables for the CanvasAPI.php page.
 
 The canvasDomain is the URL for the Canvas API. For example, the URL for
 Cabrillo College would be
-"https://cabrillo.instructure.com/api/v1".
+"cabrillo.instructure.com".
 
 The token is a cryptographically unique string of characters and numbers you
 must generate in Canvas. To generate one, login to Canvas, go to
