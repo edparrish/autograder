@@ -4,6 +4,8 @@
 require_once("../grader.php");
 require_once("../includes/foldermaker.php");
 require_once("../includes/fileremover.php");
+// Report all test problems
+error_reporting(E_ALL | E_STRICT);
 // Define required information
 define("TEST_DIR", ROOT_DIR."/test/autofiles"); // path to student test folder
 define("CID", "7193");  // Couse ID from Autograde Manager

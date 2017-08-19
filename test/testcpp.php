@@ -1,7 +1,9 @@
 <?php
 // Test all C++ features
 include_once("../grader.php");
-// Absolute path to student submissions
+// Report all test problems
+error_reporting(E_ALL | E_STRICT);
+// Absolute path to "student" test files
 define("TEST_DIR", ROOT_DIR.'/test/testfiles');
 define("CHECK_CFG", ROOT_DIR.'/test/style-cpp.txt');
 define("CODELAB_TABLE", "roster");

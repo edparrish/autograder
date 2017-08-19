@@ -1,6 +1,9 @@
 <?php
 // Simple test of the system after installation.
 require_once("../grader.php");
+// Report all test problems
+error_reporting(E_ALL | E_STRICT);
+// Absolute path to "student" test files
 define("TEST_DIR", ROOT_DIR."/test/testfiles");
 
 // Array of students to test; null for all students.

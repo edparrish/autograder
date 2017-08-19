@@ -1,7 +1,9 @@
 <?php
 // Test all aspects of system
 include_once("../grader.php");
-error_reporting(E_ALL | E_STRICT); // report all problems
+// Report all test problems
+error_reporting(E_ALL | E_STRICT);
+// Absolute path to "student" test files
 define("TEST_DIR", ROOT_DIR."/test/testfiles");
 define("STYLE_CPP", ROOT_DIR."/test/style-cpp.txt");
 define("STYLE_JAVA", ROOT_DIR."/test/style-java.xml"); // common/supplements

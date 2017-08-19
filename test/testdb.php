@@ -1,7 +1,9 @@
 <?php
 // Test database grading with example student files
 include_once("../grader.php");
-// Absolute path to student submissions
+// Report all test problems
+error_reporting(E_ALL | E_STRICT);
+// Absolute path to "student" test files
 define("TEST_DIR", ROOT_DIR.'/test/testfiles');
 
 $students = null; // for all students
@@ -60,7 +62,7 @@ class GradeRunner extends Grader {
             // Check query for required elements.
             $pat = "/ORDER\s+BY\s+(suppliers\.)?SupplierName/i";
             $this->fail(new TestMatch($pat, $queryFC), 0,
-                "-Query 2 missing clause: ORDER BY SupplierName", !$pass);
+                "-Query 2 missing clause: ORDER BY SupplierName");
         }
         // Evaluate the results
         $score = $this->report(new ValueEvaluator(4), "SQL Queries Score:");

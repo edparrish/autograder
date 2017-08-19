@@ -1481,6 +1481,7 @@ class TestStyleCPP extends TestCase {
         $numFiles = 0;
         foreach($this->fileList as $fc) {
             if (!$fc->exists()) break; // 11/7/2016
+            $fc->reload(); // 8/10/2017
             $numFiles++;
             $contents = $fc->toString(); // 11/7/2016
             $lineList = $fc->toArray();
