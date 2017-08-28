@@ -25,20 +25,23 @@ require_once 'canvasAPI.php';
   @param $asnId The number of the assignment.
   @param $targetFolder The path to the destination folder.
   @param $all Set true to download all assignments; false for only ungraded.
+  @return Number of students downloaded.
 */
 function downloadAssignments($cid, $asnId, $targetFolder, $all) {
     echo "Downloading from course $cid and asn $asnId to $targetFolder.\n";
     if (substr($targetFolder, -1) !== '/') $targetFolder .= '/';
     //startCURLLogging();
     $studentList = listStudentUsers($cid, true);
+    $numStudents = 0;
     foreach($studentList as $student) {
         $stuName = str_replace(',', '', $student->sortable_name);
         $stuName = str_replace('-', '', $stuName);
         $stuName = str_replace(' ', '', $stuName);
         $stuName = strtolower($stuName);
-        downloadStudentFiles($cid, $asnId, $student->id, $stuName, $targetFolder, $all);
+        $numStudents += downloadStudentFiles($cid, $asnId, $student->id, $stuName, $targetFolder, $all);
     }
     //stopCURLLogging();
+    return $numStudents;
 }
 
 /**
@@ -50,6 +53,7 @@ function downloadAssignments($cid, $asnId, $targetFolder, $all) {
   @param $stuName The student name to use in the target file name.
   @param $tgtFlr The path to the destination folder.
   @param $all Set true to download all assignments; false for only ungraded.
+  @return 1 if files downloaded; else 0
 */
 function downloadStudentFiles($cid, $asnId, $stuId, $stuName, $tgtFlr, $all) {
     $apiUrl = 'courses/'.$cid.'/assignments/'.$asnId.'/submissions/'.$stuId;
@@ -57,7 +61,7 @@ function downloadStudentFiles($cid, $asnId, $stuId, $stuName, $tgtFlr, $all) {
     //var_dump($studentAssignments);
     if (!isset($studentAssignments->attachments)) {
     //    echo "No student files submitted for $stuName.\n";
-        return;
+        return 0;
     }
     //echo "all=";var_dump($all);
     //echo "grade=";var_dump($studentAssignments->grade);
@@ -72,6 +76,7 @@ function downloadStudentFiles($cid, $asnId, $stuId, $stuName, $tgtFlr, $all) {
         $filePath = $tgtFlr.$file;
         downloadFile($asn->url, $filePath);
     }
+    return 1;
 }
 
 /**
