@@ -98,7 +98,7 @@ function readStudentNames($fileName) {
     $row = 1;
     $path = realpath($fileName);
     if ($path && ($handle = fopen($path, "r")) !== FALSE) {
-        echo "Reading file names: $fileName\n";
+        //echo "Reading file names: $fileName\n";
         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
             $nameList[$data[0]] = $data[1];
         }
