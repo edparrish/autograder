@@ -95,7 +95,7 @@ class TestCase {
      */
     function _deleteFiles($fileList) {
         foreach($fileList as $file) {
-            unlink($file) or die("In TestCase could not delete $file\n");
+            unlink($file) or print "In TestCase could not delete $file\n";
         }
     }
 }
@@ -275,7 +275,7 @@ class TestCompareFiles extends TestCase {
                 $lineFile2 = $lines2[$i];
                 if (!$this->ignoreCase && strcmp($lineFile1, $lineFile2)) {
                     $msg = "Line $i does not match";
-                    $msg .= ":".$lines1[$i]."|".$lines2[$i]; //11/28/16
+                    $msg .= ": ".$lines1[$i]."|".$lines2[$i]; //11/28/16
                     $tr->add($sectionName, $this->testName, $msg, 0);
                     return false;
                 } else if (strcasecmp($lines1[$i], $lines2[$i])) {
