@@ -263,11 +263,17 @@ class TestCompareFiles extends TestCase {
         }
         $lines1 = $this->file1->toArray();
         $lines2 = $this->file2->toArray();
-        if (count($lines1) !== count($lines2)) {
+        $linesFile1 = count($lines1);
+        $linesFile2 = count($lines2);
+        if ($linesFile1 !== $linesFile2) {
+            $msg = "Number of lines mismatch $linesFile1 vs $linesFile2";
+            $tr->add($sectionName, $this->testName, $msg, 0); //9/2/17
             return false;
         } else {
-            for ($i = 0; $i < count($lines1); $i++) {
-                if (!$this->ignoreCase && strcmp($lines1[$i], $lines2[$i])) {
+            for ($i = 0; $i < $linesFile1; $i++) {
+                $lineFile1 = $lines1[$i];
+                $lineFile2 = $lines2[$i];
+                if (!$this->ignoreCase && strcmp($lineFile1, $lineFile2)) {
                     $msg = "Line $i does not match";
                     $msg .= ":".$lines1[$i]."|".$lines2[$i]; //11/28/16
                     $tr->add($sectionName, $this->testName, $msg, 0);
