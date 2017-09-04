@@ -254,6 +254,9 @@ class Grader {
      */
     function runLogCmd($testCmd, $outFile="out.log", $cond=true, $timeout=5) {
         if ($cond) {
+            if (strtoupper(substr(php_uname('s'), 0, 3)) !== 'WIN') {
+                $testCmd = './'.$testCmd;
+            }
             $info = "";
             $info = shell_exec_timed("$testCmd 2>&1", $timeout);
             if (!$handle = fopen($outFile, "w")) die("Cannot open $outFile");
