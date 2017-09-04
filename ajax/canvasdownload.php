@@ -66,6 +66,8 @@ function downloadStudentFiles($cid, $asnId, $stuId, $stuName, $tgtFlr, $all) {
     //echo "all=";var_dump($all);
     //echo "grade=";var_dump($studentAssignments->grade);
     //echo "score=";var_dump($studentAssignments->score);
+    if ($all == false && $studentAssignments->workflow_state === "graded"
+            && $studentAssignments->grade != NULL) {
         //echo "Already graded assignment for $stuName.\n";
         return;
     }
