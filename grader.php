@@ -254,7 +254,8 @@ class Grader {
      */
     function runLogCmd($testCmd, $outFile="out.log", $cond=true, $timeout=5) {
         if ($cond) {
-            if (strtoupper(substr(php_uname('s'), 0, 3)) !== 'WIN') {
+            if (strtoupper(substr(php_uname('s'), 0, 3)) !== 'WIN'
+                    && substr($testCmd, 0, 2) !== './') {
                 $testCmd = './'.$testCmd;
             }
             $info = "";
