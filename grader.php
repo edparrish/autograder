@@ -718,14 +718,13 @@ class Grader {
     function reportOverall($maxScore, $showPercent = false, $comments = NULL, $showMax = false) {
         if ($comments === NULL) {
             $comments = array(
-                100=>"Truly superior work!",
-                90=>"Excellent work!",
-                85=>"Very good work with a few minor problem areas.",
-                80=>"Overall good work with some problems.",
-                85=>"Very good work with a few minor problem areas",
-                70=>"Satisfactory work with some problem areas.",
-                60=>"Passable work with problems.",
-                0=>"Please see me for help on assignments."
+                100=>"Superior work!",
+                90=>"Overall, excellent work!",
+                80=>"Overall good work with a few problem areas.",
+                70=>"Satisfactory overall with some problem areas.",
+                60=>"Passable overall with some problem areas.",
+                50=>"Missing at least half of the assignment specifications.",
+                0=>"Missing most of the assignment specifications."
             );
         }
         $percentage = round($this->score / $maxScore * 100);
