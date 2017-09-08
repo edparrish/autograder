@@ -116,6 +116,7 @@ function unzipFolder($folder) {
     $zipFileList = glob("*.[zZ][iI][pP]");
     $zipFileList = array_merge($zipFileList, glob("*.7[zZ]"));
     $zipFileList = array_merge($zipFileList, glob("*.gfar"));
+    $zipFileList = array_merge($zipFileList, glob("*.rar"));
     if ($zipFileList) {
         foreach($zipFileList as $file) {
             echo "- Unzipping file: $file\n";
