@@ -1527,7 +1527,7 @@ class TestStyleCPP extends TestCase {
                 $this->constantName($strippedContents, $file);
             }
             if ($this->getProperty('FunctionName') !== "skip") {
-                $this->functionName($strippedContents, $file, $regEx);
+                $this->functionName($strippedContents, $file);
             }
             if ($this->getProperty('VariableName') !== "skip") {
                 $this->variableName($strippedContents, $file);
