@@ -91,6 +91,51 @@ class FileContents {
     }
 
     /**
+        Returns whether or not the contents of the associated file is in ASCII format.
+
+        @return true if the contents are ASCII format; else false.
+     */
+    public function isASCII() {
+        return strlen($this->contents) === strlen(utf8_decode($this->contents));
+    }
+
+    /**
+        Returns whether or not the contents of the associated file is in RTF format.
+
+        @return true of the contents are RTF format; else false.
+     */
+    public function isRTF() {
+        return substr($this->contents, 2, 3) === "rtf";
+    }
+
+    /**
+        Returns whether or not the contents of the associated file is UTF-8 format.
+
+        @return true of the contents are UTF-8 format; else false.
+     */
+    public function isUTF8() {
+        if (preg_match('!!u', $this->contents)) return true;
+        return false;
+    }
+
+    /**
+        Converts contents from $inCharset to $outCharset character encoding.
+
+        @param $inCharset The current character set to convert from.
+        @param $inCharset The desired character set to convert to.
+        @eturn true on successful conversion; otherwise false;
+        @see http://php.net/manual/en/function.iconv.php
+     */
+    public function convCharset($inCharset="UTF-8", $outCharset="CP1252//IGNORE") {
+        $retval = iconv($inCharset, $outCharset, $this->contents);
+        if ($retval !== FALSE) {
+            $this->contents = $retval;
+            return true;
+        }
+        return false;
+    }
+
+    /**
         Returns part of the contents of this object.
 
         @param $start The index of the first character.
