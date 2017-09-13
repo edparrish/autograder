@@ -153,7 +153,7 @@ class TestCodeLab extends TestCase {
         // Missing data
         $missingCodeLab = 0;
         if ($result->num_rows === 0) {
-            echo "TestCodeLab: could not find student data\n";
+            echo "TestCodeLab: no data for $firstName $lastName. ";
             $missingCodeLab = 1;
         }
         // Need human intervention
@@ -172,7 +172,7 @@ class TestCodeLab extends TestCase {
         $incorrect = 0;
         $prefix = "0";
         $row = mysqli_fetch_assoc($result);
-        if ($row === false) {
+        if ($row == false) {
             // No student data but can count number of exercises
             $sql = "DESCRIBE $tableName";
             $result = $db->query($sql);
