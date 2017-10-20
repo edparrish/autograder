@@ -343,7 +343,7 @@ class FileContents {
                     $fcList[] = new FileContents($pathname);
                 }
             } else {
-                $type = gettype($pathname);
+                $type = gettype($file); // changed 10/1/2017 $pathname=>$file
                 $msg = "pathList must be string or FileContents, not $type.";
                 throw new InvalidArgumentException($msg);
             }

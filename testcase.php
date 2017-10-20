@@ -248,17 +248,17 @@ class TestCompareFiles extends TestCase {
         if (!$this->file1->fileExists()) {
             $msg = "File 1 does not exist: ".$this->file1->getName();
             echo("TestCompareFiles--$msg\n");
-            if ($this->showErrors) {
+            //if ($this->showErrors) { // 10/1/2017
                 $tr->add($sectionName, $this->testName, $msg, 0);
-            }
+            //}
             return false;
         }
         if (!$this->file2->fileExists()) {
             $msg = "File 2 does not exist: ".$this->file2->getName();
             echo("TestCompareFiles--$msg\n");
-            if ($this->showErrors) {
+            //if ($this->showErrors) { // 10/1/2017
                 $tr->add($sectionName, $this->testName, $msg, 0);
-            }
+            //}
             return false;
         }
         $lines1 = $this->file1->toArray();
@@ -2085,7 +2085,7 @@ print_r($funNames);
         $re = "/(\w+\s+)*([a-zA-Z_]\w*)/";
         for ($i = 0; $i < count($splitDeclaration); $i++) {
             preg_match_all($re, $splitDeclaration[$i], $matches);
-            $item = trim($matches[2][0]);
+            isset($matches[2][0]) ? $item = trim($matches[2][0]) : $item = "";
             if ($item) $varNames[] = $item;
         }
         $varNames = array_values($varNames);
