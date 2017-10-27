@@ -1772,9 +1772,9 @@ class TestStyleCPP extends TestCase {
             if (!$endComment && preg_match($funHeaderRE, $lines[$i])
                     || preg_match($classNameRE, $lines[$i])) {
                 if (!$cppComment) {
-                    $this->addError("$file: Wrong file comment block", $value);
-                } else {
                     $this->addError("$file: Missing file comment block", $value);
+                } else {
+                    $this->addError("$file: Wrong file comment block", $value);
                 }
                 $this->hasFileCommentBlockError = true;
                 return false;
