@@ -1220,7 +1220,7 @@ class TestReadme extends TestCase {
             }
         }
         if ($ext === "cpp") {
-            $msg = "README.txt must be a text file, not a C++ file";
+            $msg = "README.txt must be a text file, not a cpp file";
             $tr->add($sectionName, $this->testName, $msg, -1);
             $errorFree = false;
         }
