@@ -580,9 +580,9 @@ class TestCompileJava extends TestCase {
         } else if ($errors != 0) {
             $msg = "Errors found during compile (x$errors)";
             $tr->add($sectionName, $this->testName, $msg, 0);
-        } else if (strlen($info) != 0) {
-            $msg = "Problems running $this->cmd";
-            $tr->add($sectionName, $this->testName, $msg, 0);
+//        } else if (strlen($info) != 0) { // removed 11/3/17
+//            $msg = "Problems running $this->cmd\n$info";
+//            $tr->add($sectionName, $this->testName, $msg, 0);
         } else {
             $msg = "No errors during compile\n";
             fwrite($handle, $msg);
@@ -599,6 +599,11 @@ class TestCompileJava extends TestCase {
         $tr->setProperty("notices", $notices);
         if ($notices) {
             $msg = "Notes found during compile";
+            $tr->add($sectionName, $this->testName, $msg, 0);
+        }
+        // Added following 11/3/17
+        if (!$errors && !$warnings && !$notices && strlen($info) != 0) {
+            $msg = "Problems running $this->cmd\n$info";
             $tr->add($sectionName, $this->testName, $msg, 0);
         }
         // var_dump($msg);
@@ -1848,6 +1853,9 @@ class TestStyleCPP extends TestCase {
         }
         $constructProtoList = array_merge($constructors, $prototypes);
         //var_dump($constructProtoList);
+        //if (!$constructProtoList) {
+        //    $this->addError("$file: Missing function prototypes for comments", $value);
+        //}
         // Check for end of a block comment before each prototype
         foreach ($constructProtoList as $proto) {
             $funCommentRE = "/\*\/\s+".preg_quote($proto)."/";
@@ -1855,6 +1863,7 @@ class TestStyleCPP extends TestCase {
                 $this->addError("$file: Missing block comment before prototype: $proto", $value);
             }
         }
+        //if ($constructProtoList) return;
 /* NTR: need to check definitions if there are no prototypes
         // extract function definitions
         $funRE = "/\w+\s+([\w:]+)\s*\([^)]*\)\s*(const)?\s*{[^}]*}/";
@@ -1868,8 +1877,16 @@ class TestStyleCPP extends TestCase {
                 if ($funNames[$i] == $word) unset($funDefn[$i]);
             }
         }
-print_r(array_values($funDefn));
-print_r($funNames);
+//print_r(array_values($funDefn));
+//print_r($funNames);
+        // Check for end of a block comment before each definition
+        foreach ($funDefn as $fun) {
+var_dump($fun);
+            $funCommentRE = "/\*\/\s+".preg_quote($fun)."/";
+            if (!preg_match($funCommentRE, $contents)) {
+                $this->addError("$file: Missing block comment before definition: $fun", $value);
+            }
+        }
 */
     }
     /**
