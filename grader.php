@@ -412,8 +412,10 @@ class Grader {
         }
         // Still multiple files
         $testFile = $ff->findClosestFile($fileName);
-        echo "Selecting closest file: $testFile for $fileName\n";
-        //echo "Looking for $fileName and found '$testFile'\n";
+        if ($testFile != $fileName) {
+            echo "Selecting closest file: $testFile for $fileName\n";
+            //echo "Looking for $fileName and found '$testFile'\n";
+        }
         return $testFile;
     }
 
