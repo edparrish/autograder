@@ -758,6 +758,7 @@ class TestMatch extends TestCase {
     function runTest(&$tr, $sectionName) {
         if (!$this->fileList) {
             echo "No files to TestMatch: ";
+            return false;
         }
         $numPatMatches = 0;
         $tr->setProperty("fileName", ""); //added 5/14/2016
