@@ -148,6 +148,19 @@ class FileContents {
     }
 
     /**
+        Returns the position of the first occurrence of a substring.
+
+        @param $needle The substring to look for in the contents.
+        @param $offset The starting position to begin searching
+        @return The starting position of needle, or false if not found.
+        @see: http://php.net/manual/en/function.strpos.php
+        @since 11/4/2017
+     */
+    public function strpos($needle, $offset=0) {
+        return strpos($this->contents, $needle, $offset);
+    }
+
+    /**
         Returns whether or not the underlying file exists.
 
         @return true of the file currently exists; otherwise returns false.
