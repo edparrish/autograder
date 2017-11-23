@@ -111,7 +111,7 @@ class FileFinder {
      */
     public function filterName($regex, $invert=false) {
         if (!$regex) {
-            echo "Invalid regex in FileFinder.filterName()\n";
+            echo "Missing regex in FileFinder.filterName()\n";
             return;
         }
         $newList = array();
