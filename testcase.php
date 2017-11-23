@@ -1492,7 +1492,7 @@ class TestStyleCPP extends TestCase {
     function runTest(&$tr, $sectionName) {
         $numFiles = 0;
         foreach($this->fileList as $fc) {
-            if (!$fc->exists()) break; // 11/7/2016
+            if (!$fc->exists()) continue; // 11/22/2017
             $fc->reload(); // 8/10/2017
             $numFiles++;
             $contents = $fc->toString(); // 11/7/2016
