@@ -9,7 +9,8 @@ require_once ROOT_DIR.'/includes/util.php';
     @version 1.0 07/29/08
     @version 1.2 11/07/16
     @version 1.3 06/19/17
-    TODO: add a findLatestFile() method
+    TODO: add a findLatestFile() method.
+    TODO: add a findFiles($re) that returns a list of files matching a pattern.
 */
 class FileFinder {
     private $files = array();
