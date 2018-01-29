@@ -390,7 +390,6 @@ class TestCompileCPP extends TestCase {
         @param $pathName The path and name of the file to compile.
         @param $cmd The command string to execute, overridding the default. Use this parameter to invoke makefiles as well.
      */
-  //function TestCompileCPP($cmd, $log="compile.log", $msg="", $clean=true)
     function TestCompileCPP($pathName, $cmd = "") {
         $this->testName = get_class();
         $this->pathName = $pathName;
