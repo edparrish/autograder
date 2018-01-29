@@ -123,7 +123,7 @@ if (isset($_POST['do']) && $_POST['do']=='upload') {
     $gradeLog = $_POST['log'];
     $type = $_POST['type'];
     uploadGrade($cid, $asnId, $sourceFolder, $gradeLog, $type);
-} else if ($argc == 5 || $argc == 6) {
+} else if (isset($argc) && ($argc == 5 || $argc == 6)) {
     // Command line mode
     $cid = $argv[1];
     $asnId = $argv[2];
@@ -132,7 +132,7 @@ if (isset($_POST['do']) && $_POST['do']=='upload') {
     $type = "both";
     if ($argc == 6) $type = $argv[5];
     uploadGrade($cid, $asnId, $sourceFolder, $gradeLog, $type);
-} else if ($argc == 1) {
+} else if (isset($argc) && $argc == 1) {
     // Invoked when included -- do nothing
     // Also can be test mode with hard-coded parameters:
     //$cid = 3113;

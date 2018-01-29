@@ -132,14 +132,14 @@ if (isset($_POST['do']) && $_POST['do']=='download') {
     $targetFolder = $_POST['folder'];
     $all = true ? $_POST['all'] == "true" : false;
     downloadAssignments($cid, $asnId, $targetFolder, $all);
-} else if ($argc == 5) {
+} else if (isset($argc) && $argc == 5) {
     // Command line mode
     $cid = $argv[1];
     $asnId = $argv[2];
     $targetFolder = $argv[3];
     $all = $argv[4];
     downloadAssignments($cid, $asnId, $targetFolder, $all);
-} else if ($argc == 1) {
+} else if (isset($argc) && $argc == 1) {
     // File is included -- do nothing
     // Also can be test mode with hard-coded parameters:
     //$cid = 3113;
