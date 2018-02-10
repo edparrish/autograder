@@ -143,11 +143,18 @@ class TestCodeLab extends TestCase {
         $result = $db->query($sql);
         // If people use a short name
         if ($result->num_rows === 0) {
-            $sql = "
-                SELECT * FROM $tableName
-                    WHERE LastName='$lastName'
-                    AND FirstName LIKE '$firstName[0]%'
-                ";
+            if ($firstName) {
+                $sql = "
+                    SELECT * FROM $tableName
+                        WHERE LastName='$lastName'
+                        AND FirstName LIKE '$firstName[0]%'
+                    ";
+            } else {
+                $sql = "
+                    SELECT * FROM $tableName
+                        WHERE LastName='$lastName'
+                    ";
+            }
             $result = $db->query($sql);
         }
         // Missing data
