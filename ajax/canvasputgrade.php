@@ -90,7 +90,12 @@ function putFeedback($cid, $asnId, $stuId, $pathName, $type) {
 function getScore($contents) {
     $pattern = "/\bTotal Score:\s*(\d+)/";
     preg_match($pattern, $contents, $matches);
-    $score = $matches[1]; // posted_grade
+    if (isset($matches[1])) {
+        $score = $matches[1]; // posted_grade
+    } else {
+        $score = "0";
+        echo "Error: could not find \"Total Score\", setting to 0\n";
+    }
     return $score;
 }
 
