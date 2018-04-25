@@ -567,6 +567,10 @@ class Grader {
         return $this->results->count($this->sectionName);
     }
 
+    function getSectionResults() {
+        return $this->results->getMessageList($this->sectionName);
+    }
+
     /**
         Get the sum of the values of the current section.
 
@@ -724,13 +728,15 @@ class Grader {
     function reportOverall($maxScore, $showPercent = false, $comments = NULL, $showMax = false) {
         if ($comments === NULL) {
             $comments = array(
-                100=>"Superior work!",
+                101=>"Superior work!", // extra credit
+                100=>"Excellent work!",
                 90=>"Overall, excellent work!",
-                80=>"Overall good work with a few problem areas.",
-                70=>"Satisfactory overall with some problem areas.",
-                60=>"Passable overall with some problem areas.",
-                50=>"Missing at least half of the assignment specifications.",
-                0=>"Missing most of the assignment specifications."
+                80=>"Overall good work with a few opportunities to improve.",
+                70=>"Satisfactory overall with some opportunities to improve.",
+                60=>"Passable overall with several opportunities to improve.",
+                50=>"Needs more work and has many opportunities to improve",
+                3=>"Needs more work and has many opportunities to improve",
+                0=>"Missing most of the work and needs to improve."
             );
         }
         $percentage = round($this->score / $maxScore * 100);
