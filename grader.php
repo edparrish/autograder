@@ -559,9 +559,9 @@ class Grader {
     }
 
     /**
-        Get the count of the current section.
+        Get the count of the number of entries in the current section.
 
-        @return The current section count.
+        @return The number of entries in the current section count.
     */
     function getSectionResultsCount() {
         return $this->results->count($this->sectionName);

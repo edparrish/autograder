@@ -104,7 +104,7 @@ class FileFinder {
     }
 
     /**
-        Remove a filename if the filepath matches $regex.
+        Remove a filename if $regex has a match in filepath.
 
         @param $regex The regular expression to use for filepath matching.
         @param $invert Set true to keep filepaths that match $regex and

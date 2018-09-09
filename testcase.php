@@ -860,9 +860,9 @@ class TestMatchCount extends TestCase {
         @param $patList A list of regular expressions to match.
         @param $fileList The list of file patterns to search.
         @param $min The minimum count to not cause an error.
-        @param $max The maximum count to not cause an error, or 0 for unlimited
+        @param $max The maximum count to not cause an error, or -1 for no limit
      */
-    function TestMatchCount($patList, $fileList, $min=0, $max=0) {
+    function TestMatchCount($patList, $fileList, $min=0, $max=-1) {
         $this->testName = get_class();
         if (!is_array($patList)) {
             $patList = array($patList);
@@ -910,7 +910,7 @@ class TestMatchCount extends TestCase {
         }
         $tr->setProperty("count", $numItemMatches);
         if ($numItemMatches < $this->min
-                OR ($numItemMatches > $this->max AND $this->max > 0)) {
+                OR ($numItemMatches > $this->max AND $this->max > -1)) {
             return false;
         }
         return true;

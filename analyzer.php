@@ -6,9 +6,9 @@
     @version 1.0 06/21/04
     @version 1.3 02/12/05
     @version 1.4 06/19/17
-    TODO: update
+    TODO: update to not subclass grader.php
 */
-define("TEST_DIR", "C:/Courses/tools/autograde5/testfiles");
+define("TEST_DIR", "C:/Courses/tools/autograder/test/testfiles");
 $students = null;
 
 include("grader.php");
@@ -19,8 +19,14 @@ class Analyzer extends Grader {
   var $countExtra = 0;
   var $totalExtra = 0;
 
+  function __construct($testDir, $students = false)
+  {
+    parent::__construct($testDir, $students);
+  }
+
   // skip summary.log
   function startTest() {
+    parent::startTest();
     $this->timestamp = mktime();
     echo "Tabulating results:\n";
     echo "Student \tSc\tEC\tTtl\tHours\n";
@@ -100,6 +106,7 @@ class Analyzer extends Grader {
   }
 }
 
+echo "OK\n";
 if ($argc == 2) {
   $testDir = $argv[1];
 } else if (defined('TEST_DIR')) {
