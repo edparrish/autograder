@@ -317,6 +317,18 @@ class FileContents {
     }
 
     /**
+        Truncate contents.
+
+        @param $max The maximum length of the final contents.
+     */
+    public function truncate($max) {
+        $len = strlen($this->contents);
+        if ($len > $max) {
+            $this->contents = substr($this->contents, 0, $max - 3).'...';
+        }
+    }
+
+    /**
         Reload the contents from the original file.
      */
     public function reload() {
