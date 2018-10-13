@@ -255,7 +255,7 @@ class CodeLabEvaluator extends Evaluator {
         // Additional messages
         if (1 == $missingCodeLab) {
             $msg = "Not registered with CodeLab";
-            //$score = 0; // added 9/10/2012
+            $score = 0; // added 9/10/2018
             $tr->add($sectionName, "CodeLabTest", $msg, 0);
         } else if ($score < $this->maxScore) {
             $eachRound3 = round($each, 3);
