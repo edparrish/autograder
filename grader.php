@@ -256,7 +256,9 @@ class Grader {
         if ($cond) {
             if (strtoupper(substr(php_uname('s'), 0, 3)) !== 'WIN'
                     && substr($testCmd, 0, 2) !== './') {
-                $testCmd = "timeout {$timeout}s ./".$testCmd;
+                $timeLen = $timeout + .1; // allow kill msg in shell_exec_timed
+                // Linux timeout is backstop to shell_exec_timed
+                $testCmd = "timeout {$timeLen}s ./".$testCmd;
             }
             $info = "";
             $info = shell_exec_timed("$testCmd 2>&1", $timeout);
