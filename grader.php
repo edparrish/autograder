@@ -258,6 +258,7 @@ class Grader {
                     && substr($testCmd, 0, 2) !== './') {
 //                $testCmd = './'.$testCmd;
                 $testCmd = "timeout {$timeout}s ./".$testCmd;
+echo "testCmd=$testCmd\n";
             }
             $info = "";
             $info = shell_exec_timed("$testCmd 2>&1", $timeout);
