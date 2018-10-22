@@ -256,7 +256,8 @@ class Grader {
         if ($cond) {
             if (strtoupper(substr(php_uname('s'), 0, 3)) !== 'WIN'
                     && substr($testCmd, 0, 2) !== './') {
-                $testCmd = './'.$testCmd;
+//                $testCmd = './'.$testCmd;
+                $testCmd = "timeout {$timeout}s ./".$testCmd;
             }
             $info = "";
             $info = shell_exec_timed("$testCmd 2>&1", $timeout);
