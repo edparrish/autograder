@@ -252,7 +252,7 @@ class Grader {
         @return the output written to the log file
         NTR: does not timeout if held by cin statement.
      */
-    function runLogCmd($testCmd, $outFile="out.log", $cond=true, $timeout=1) {
+    function runLogCmd($testCmd, $outFile="out.log", $cond=true, $timeout=1.1) {
         if ($cond) {
             if (strtoupper(substr(php_uname('s'), 0, 3)) !== 'WIN'
                     && substr($testCmd, 0, 2) !== './') {
