@@ -437,7 +437,7 @@ class TestCompileCPP extends TestCase {
         // Compile files
         $cmd = $this->cmd;
         if ($cmd === '') {
-            $cmd = "g++ -Wall -Wextra -o $base $testBase.cpp";
+            $cmd = "g++ -Wall -Wextra -std=c++14 -o $base $testBase.cpp";
         }
         fwrite($handle, "Compiled with: $cmd\n");
         // Compile sequence
