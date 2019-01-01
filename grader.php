@@ -741,7 +741,8 @@ class Grader {
                 0=>"Missing most of the work and needs to improve."
             );
         }
-        $percentage = round($this->score / $maxScore * 100);
+        $percentage = 0;
+        if ($maxScore > 0) $percentage = round($this->score / $maxScore * 100);
         $overallComment = $this->commentFromPercentage($percentage, $comments);
         $msg = "Total Score: $this->score";
         if ($showMax) $msg .= " of $maxScore";
