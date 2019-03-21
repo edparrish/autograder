@@ -262,7 +262,8 @@ class CodeLabEvaluator extends Evaluator {
             $msg = "CodeLab correct on time: $correctOnTime / $totalProblems (x$eachRound3 each)";
             $tr->add($sectionName, "CodeLabTest", $msg, 0);
         }
-        if ($eachWrong !== 0 && $wrong > 0  && $score < $this->maxScore) {
+//        if ($eachWrong !== 0 && $wrong > 0  && $score < $this->maxScore) {
+        if ($wrong > 0  && $score < $this->maxScore) { // 2/11/2019
             $eachWrongRound3 = round($eachWrong, 3);
             $msg = "CodeLab incorrect but attempted: $wrong ($eachWrongRound3 each)";
             $tr->add($sectionName, "CodeLabTest", $msg, 0);

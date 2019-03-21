@@ -38,7 +38,7 @@ class Readme {
             $this->isExtraCredit = $this->findExtraCreditClaim();
             //echo "*extra credit=";var_dump($this->isExtraCredit);
             $this->isPairProg = $this->findPairProgClaim();
-            //echo "pair program=";var_dump($this->isPairProg);
+            echo "pair program=";var_dump($this->isPairProg);
         }
     }
 
@@ -285,22 +285,22 @@ class Readme {
         $rmfc = $this->fileContents;
         $pat = "/Parte?ner:?\s*(\b\w{3,}\b)/i"; // updated 9/30/15
         $parts = $rmfc->extractFirst($pat);
-        if (isset($parts[1])
-        && strtolower($parts[1]) != "none"
-        && strtolower($parts[1]) != "n/a"
-        && strtolower($parts[1]) != "no"
-        && strtolower($parts[1]) != "not"
-        && strtolower($parts[1]) != "self"
-        && strtolower($parts[1]) != "os") {
-            $this->partnerName = $parts[1];
-            return true;
-        }
+        isset($parts[0]) ? $name = $parts[1] : $name = "";
+        if (strtolower($parts[1]) === "none") $name = "";
+        if (strtolower($parts[1]) === "n/a") $name = "";
+        if (strtolower($parts[1]) === "no") $name = "";
+        if (strtolower($parts[1]) === "not") $name = "";
+        if (strtolower($parts[1]) === "self") $name = "";
+        if (strtolower($parts[1]) === "os") $name = "";
+        $this->partnerName = $name;
+        if ($name) return true;
         // Look for hours working with partner > 0
         $pat = "/with\s*parte?ner[: ]*([0-9.]+).*\n/i"; // updated 10/2/15
         $parts = $rmfc->extractFirst($pat);
         if (isset($parts[1]) && floatval($parts[1]) > 0) return true;
         // Look for a claim of pair programming
-        if ($rmfc->extractFirst("/Pair(\s+|-)?program/i")) return true;
+        // Following removed 3/20/2019
+        //if ($rmfc->extractFirst("/Pair(\s+|-)?program/i")) return true;
         return false;
     }
 }
