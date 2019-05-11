@@ -31,7 +31,7 @@ class FileContents {
                 throw new InvalidArgumentException($msg);
             }
             if (is_dir($pathname)) {
-                $msg = "FileContents: pathname is a directory, not a file.";
+                $msg = "FileContents: pathname is a directory, not a file: $pathname";
                 throw new UnexpectedValueException($msg);
             }
             $this->pathname = realpath($pathname);
@@ -215,7 +215,7 @@ class FileContents {
         //var_dump($matches); // debug patterns
         //var_dump($result); // debug patterns
         //if ($matches == NULL) debug_print_backtrace();
-        //if ($result == 0) debug_print_backtrace();
+        //if ($result === FALSE) debug_print_backtrace();
         return $result;
     }
 
