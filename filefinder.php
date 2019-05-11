@@ -117,10 +117,10 @@ class FileFinder {
         }
         $newList = array();
         foreach ($this->files as $fileName) {
-            $matches = preg_match($regex, $fileName);
-            if ($matches === 0 and  !$invert) {
+            $isMatch = preg_match($regex, $fileName);
+            if ($isMatch === 0 and  !$invert) {
                 $newList[] = $fileName;
-            } else if ($matches > 0 and $invert) {
+            } else if ($isMatch > 0 and $invert) {
                 $newList[] = $fileName;
             }
         }
@@ -203,12 +203,12 @@ class FileFinder {
 
     /**
         Returns the file-path of the specified fileName. If the file
-        does not exist, then returns NULL.
+        is not in the list, then returns NULL.
 
         @param $fileName The file name for which to search.
         @param $caseMatters Set true if case matters.
+        @return the file or NULL if the file is not in the list.
         @since: 12/15/2011
-        TODO: Allow regex for file name.
     */
     public function findFilePath($fileName, $caseMatters = false) {
         if ($this->files == NULL or count($this->files) == 0) {
@@ -223,6 +223,28 @@ class FileFinder {
             }
         }
         return NULL; // not found
+    }
+
+    /**
+        Returns an array of all file-paths of the matching fileNameRE, or
+        an empty array if no matches are found.
+
+        @param $fileNameRE The regular expression to use for filepath matching.
+        @return an array of any files matching the $fileNameRE.
+        @since: 05/11/2019
+     */
+    public function findFilePathRE($fileNameRE) {
+        if ($this->files == NULL) {
+            return array();
+        }
+        $matchList = array();
+        foreach ($this->files as $filePath) {
+            $isMatch = preg_match($fileNameRE, $filePath);
+            if ($isMatch > 0) {
+                $matchList[] = $filePath;
+            }
+        }
+        return $matchList;
     }
 
     /**
@@ -378,6 +400,11 @@ function testFileFinder() {
     assert('$ff->findClosestFile("filefinger.php") === "filefinder.php"');
     assert('$ff->fileExists("testcase.php")');
     assert('!$ff->fileExists("bogus.php")');
+    assert('$ff->findFilePath("filefinder.php") === "filefinder.php"');
+    assert('$ff->findFilePath("fileFinder.php", true) === NULL');
+    assert('$ff->findFilePathRE("/filefinder\.php/")[0] === "filefinder.php"');
+    assert('$ff->findFilePathRE("/fileFinder\.php/") === array()');
+    assert('$ff->findFilePathRE("/fileFinder\.php/i")[0] === "filefinder.php"');
     $ff->filterName("/phpQuery-onefile.php/");
     //var_dump($ff->findLargestFile());
     assert('$ff->findLargestFile() === "testcase.php"');
@@ -385,6 +412,6 @@ function testFileFinder() {
     // Clean up
     assert('unlink("./newestfile.php")');
     echo "...unit test complete\n";
-    // var_dump($ff->files());
+    //var_dump($ff->files());
 }
 ?>
