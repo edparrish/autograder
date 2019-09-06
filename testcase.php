@@ -235,13 +235,13 @@ class TestCompareFiles extends TestCase {
         $this->file1 = $fileList[0];
         if (sizeof($fileList) > 1) {
             $name = $this->file1->getName();
-            echo "TestCompareFiles: mutiple files found, choosing first: $name\n";
+            echo "TestCompareFiles: multiple files found, choosing first: $name\n";
         }
         $fileList = FileContents::toFileContents($file2);
         $this->file2 = $fileList[0];
         if (sizeof($fileList) > 1) {
             $name = $this->file2->getName();
-            echo "TestCompareFiles: mutiple files found, choosing first: $name\n";
+            echo "TestCompareFiles: multiple files found, choosing first: $name\n";
         }
         $this->ignoreCase = $ignoreCase;
     }
@@ -1913,7 +1913,7 @@ var_dump($fun);
                 if (isset($matches[1])
                     && strpos($matches[1], 'public') === false
                     && strpos($matches[1], 'private') === false) {
-                        $msg = "$file-$lineNum: Always indent statements inside braces";
+                        $msg = "$file-$lineNum: Indent all statements inside braces";
                         //echo "$msg: $word\n"; // for debugging
                         $this->addError($msg, $value);
                 }

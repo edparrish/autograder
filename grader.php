@@ -838,7 +838,7 @@ class Grader {
 
         // Student reported name in their style
         $studentName = "";
-        if (fileExists("[Rr][Ee][Aa][Dd][Mm][Ee]*")) {
+        if (fileExists("[Rr][Ee][Aa][Dd][Mm][Ee]*", true)) {
             $studentName = trim($this->readme->getStudentName());
         }
         if ($studentName == ":") $studentName = ""; // added 12/20/2013

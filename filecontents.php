@@ -84,7 +84,7 @@ class FileContents {
         Returns the length of the file contents.
 
         @return The length of the string; 0 if the string is empty.
-        @see: http://php.net/manual/en/function.strlen.php
+        @see: https://php.net/manual/en/function.strlen.php
      */
     public function length() {
         return strlen($this->contents);
@@ -124,7 +124,7 @@ class FileContents {
         @param $inCharset The current character set to convert from.
         @param $inCharset The desired character set to convert to.
         @eturn true on successful conversion; otherwise false;
-        @see http://php.net/manual/en/function.iconv.php
+        @see https://php.net/manual/en/function.iconv.php
      */
     public function convCharset($inCharset="UTF-8", $outCharset="CP1252//IGNORE") {
         $retval = iconv($inCharset, $outCharset, $this->contents);
@@ -141,7 +141,7 @@ class FileContents {
         @param $start The index of the first character.
         @param $length The number of characters to return.
         @return The extracted string; or an empty string.
-        @see: http://php.net/manual/en/function.substr.php
+        @see: https://php.net/manual/en/function.substr.php
      */
     public function substr($start, $length) {
         return substr($this->contents, $start, $length);
@@ -153,10 +153,11 @@ class FileContents {
         @param $needle The substring to look for in the contents.
         @param $offset The starting position to begin searching
         @return The starting position of needle, or false if not found.
-        @see: http://php.net/manual/en/function.strpos.php
+        @see: https://php.net/manual/en/function.strpos.php
         @since 11/4/2017
      */
     public function strpos($needle, $offset=0) {
+        if (empty($needle)) return FALSE;
         return strpos($this->contents, $needle, $offset);
     }
 
@@ -164,7 +165,7 @@ class FileContents {
         Returns whether or not the underlying file exists.
 
         @return true of the file currently exists; otherwise returns false.
-        @see: http://php.net/manual/en/function.file-exists.php
+        @see: https://php.net/manual/en/function.file-exists.php
      */
     public function fileExists() {
         return file_exists($this->pathname);
@@ -206,7 +207,7 @@ class FileContents {
 
         @param $pat The regular expression pattern to search with.
         @return 1 if the pattern matches given subject, 0 if it does not.
-        @see: http://php.net/manual/en/function.preg-match.php
+        @see: https://php.net/manual/en/function.preg-match.php
      */
     public function isMatch($pat) {
         $result = preg_match($pat, $this->contents /*, $matches*/);
@@ -223,7 +224,7 @@ class FileContents {
       Extract the first pattern found from a file with subpatterns.
 
       @return Returns an array where $matches[0] will contain the text that matched the full pattern, $matches[1] will have the text that matched the first captured parenthesized subpattern, and so on.
-      @see: http://php.net/manual/en/function.preg-match.php
+      @see: https://php.net/manual/en/function.preg-match.php
     */
     public function extractFirst($pat) {
         preg_match($pat, $this->contents, $matches);
@@ -234,7 +235,7 @@ class FileContents {
       Extract all of a pattern from a file with subpatterns.
 
       @return Returns a 2D array where the first dimension is the match for each text found. $matches[x][0] will contain the text that matched the full pattern, $matches[x][1] will have the text that matched the first captured parenthesized subpattern, and so on.
-      @see: http://php.net/manual/en/function.preg-match-all.php
+      @see: https://php.net/manual/en/function.preg-match-all.php
     */
     public function extractAll($pat) {
         preg_match_all($pat, $this->contents, $matches);
@@ -253,6 +254,9 @@ class FileContents {
 
     /**
         Search and replace all text in the file matching the pattern.
+
+        @param $pat The regular expression pattern to search with.
+        @param $replacement The replacement string that may contain references.
      */
     public function filter($pat, $replacement="") {
         $this->contents = preg_replace($pat, $replacement, $this->contents);
@@ -286,10 +290,10 @@ class FileContents {
     /**
         Remove C and C++ style comments from the entire file contents.
 
-        @see: http://ostermiller.org/findcomment.html
+        @see: https://ostermiller.org/findcomment.html
      */
     public function stripComments() {
-        // Strip comments: http://ostermiller.org/findcomment.html
+        // Strip comments: https://ostermiller.org/findcomment.html
         $re = '/((?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:\/\/.*))/';
         $this->filter($re, "");
     }

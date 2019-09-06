@@ -267,7 +267,8 @@ class FileFinder {
 
         @param $targetName The file name for which to search.
         @param $onlyBasename Only use file basename during search.
-        @return the filepath of the largest file matching the glob and filters.
+        @return the filepath of the largest file matching the glob and filters;
+                returns NULL if not files found.
      */
     public function findClosestFile($targetName, $onlyBasename = true) {
         $numFiles = count($this->files);
