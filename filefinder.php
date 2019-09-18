@@ -265,28 +265,29 @@ class FileFinder {
         number of characters to replace, insert or delete to transform the
         filepath into the target string using the Levenshtein distance.
 
-        @param $targetName The file name for which to search.
-        @param $onlyBasename Only use file basename during search.
+        @param $fName The file name for which to search.
+        @param $onlyBase Only use file basename during search.
         @return the filepath of the largest file matching the glob and filters;
                 returns NULL if not files found.
      */
-    public function findClosestFile($targetName, $onlyBasename = true) {
+    public function findClosestFile($fName, $onlyBase=true) {
         $numFiles = count($this->files);
         if ($this->files == NULL or $numFiles == 0) {
             return NULL;
         }
-        if ($onlyBasename) $targetName = basename($targetName);
+        if ($onlyBase) $fName = basename($fName);
+        $fName = strtolower($fName); // for case insensitive matching
         $closestName = $this->files[0];
-        $name = $closestName;  // 11/26/2012
-        if ($onlyBasename) $name = basename($name); // 11/26/2012
-        $shortestDistance = levenshtein($targetName, $name);
+        $curtName = $closestName;
+        if ($onlyBase) $curtName = basename($curtName);
+        $shortestDistance = levenshtein($fName, $curtName);
         for ($i = 1; $i < $numFiles; $i++) {
-            $name = $this->files[$i];
-            if ($onlyBasename) $name = basename($name);
-            $distance = levenshtein($targetName, $name);
+            $curtName = $this->files[$i];
+            if ($onlyBase) $curtName = basename($curtName);
+            $curtName = strtolower($curtName); // for case insensitive matching
+            $distance = levenshtein($fName, $curtName);
             if ($shortestDistance > $distance) {
-                //$closestName = $name;
-                $closestName = $this->files[$i]; // 11/4/2012
+                $closestName = $this->files[$i];
                 $shortestDistance = $distance;
             }
         }
