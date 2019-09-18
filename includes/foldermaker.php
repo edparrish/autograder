@@ -35,7 +35,7 @@ function makeFolders($testDir) {
             if ($num_Bars >= 3 /* && $comp !== 0*/) { // student file
                 $nameList = preg_split("/_/", $entry); // parse file name
                 // Adjust nameList to extract folder and file name
-                if (strtolower($nameList[1]) == "late") {
+                if ($nameList[1] == "late") {
                     // remove word late for late asn
                     unset($nameList[1]);
                     $nameList = array_values($nameList);
@@ -94,7 +94,6 @@ function addCommentsFile($folder, $studentName) {
 
 // Returns an array of student names for canvas dir
 function readStudentNames($fileName) {
-    file_exists($fileName) or die ("Missing $fileName, exiting...");
     $nameList = array();
     $row = 1;
     $path = realpath($fileName);
@@ -145,25 +144,18 @@ function testMakeFolders() {
     error_reporting(E_ALL | E_STRICT); // report all problems
     require_once 'util.php';
     $pass = true; // optimistic result
-    echo "...creating files in current folder matching Canvas pattern\n";
+    echo "...creating file in current folder matching Canvas pattern\n";
     $filename = "studenttest_30473_511771_test.txt";
     file_put_contents($filename, "testing makeFolders\n");
-    $filename = "studenttest2_LATE_10624_1474040_test.txt";
-    file_put_contents($filename, "testing makeFolders when late\n");
     echo "...testing makeFolders()\n";
     makeFolders(__DIR__);
     // Verify new folder and files exist
     $pass &= assert(file_exists('studenttest'));
     $pass &= assert(file_exists('studenttest/SubmissionComments.txt'));
     $pass &= assert(file_exists('studenttest/test.txt'));
-    $pass &= assert(file_exists('studenttest2'));
-    $pass &= assert(file_exists('studenttest2/SubmissionComments.txt'));
-    $pass &= assert(file_exists('studenttest2/test.txt'));
     echo "...removing new studenttest folder\n";
     deleteFolder("studenttest");
-    deleteFolder("studenttest2");
     $pass &= assert(!file_exists('studenttest'));
-    $pass &= assert(!file_exists('studenttest2'));
     echo "...unit test completed and ";
     echo $pass ? "passed.\n" : "failed.\n";
 }
@@ -186,7 +178,7 @@ With the -h, or -? options, you can get this help.
 // Following handles args
 if ($argc == 1) {
     // Code is included in another script -- do nothing
-    testMakeFolders(); // Uncomment to unit test, recomment to use
+    //testMakeFolders(); // Uncomment to unit test, recomment to use
 } else if ($argc == 2 && $argv[1] == "-h" || $argv[1] == "-?") {
     showFolderMakerUsage();
 } else if ($argc == 2) {
