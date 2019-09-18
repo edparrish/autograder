@@ -564,15 +564,16 @@ class TestCompileJava extends TestCase {
         // Compile files
         fwrite($handle, "Command: $this->cmd\n");
         if (strtoupper(substr(php_uname('s'), 0, 3)) === 'WIN') {
-//            $errout = ERROUT;  // errout collects info for Windows
-//            $info = `$errout $this->cmd`;
+            $errout = ERROUT;  // errout collects info for Windows
+            $info = `$errout $this->cmd`;
 //echo "cmd=";var_dump("$this->cmd >1 out.log 2>&1");
-            $info = `$this->cmd 1> out.msg 2>&1`;
+//            $info = `$this->cmd 1> out.msg 2>&1`;
+            $info = `$this->cmd 2>&1`;
         } else {
             $info = `$this->cmd 2>&1`;
         }
         $info = file_get_contents('out.msg');
-echo "info=";var_dump($info);
+//echo "info=";var_dump($info);
         $info = trim($info);
         fwrite($handle, $info."\n");
         if (substr_count($info, "Usage: javac") != 0) {

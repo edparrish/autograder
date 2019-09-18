@@ -284,7 +284,7 @@ class FileFinder {
         for ($i = 1; $i < $numFiles; $i++) {
             $curtName = $this->files[$i];
             if ($onlyBase) $curtName = basename($curtName);
-            $curtName = strtolower($curtName); // for case insensitive matching
+            $curtName = strtolower($curtName); // for case insensitive match
             $distance = levenshtein($fName, $curtName);
             if ($shortestDistance > $distance) {
                 $closestName = $this->files[$i];

@@ -528,7 +528,7 @@ class Grader {
         @return true if the TestCase ran and passed, otherwise false.
      */
     function passFail($testCase, $passPts, $passMsg, $failPts, $failMsg, $condition = true) {
-        $pass = false;
+        $pass = false; // pessimistic
         if ($condition) {
             $pass = $testCase->run($this->results, $this->sectionName);
             if ($pass) {

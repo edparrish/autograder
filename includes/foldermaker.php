@@ -14,6 +14,7 @@
     @author Edward Parrish
     @version 1.0 06/19/2016
     @version 1.1 07/30/2017 Added units test and minor updates.
+    @version 1.2 09/18/2019 Expanded unit test and updated late submit.
 */
 require_once 'util.php';
 define("NAME_FILE", "../studentnames.csv");
@@ -186,7 +187,7 @@ With the -h, or -? options, you can get this help.
 // Following handles args
 if ($argc == 1) {
     // Code is included in another script -- do nothing
-    testMakeFolders(); // Uncomment to unit test, recomment to use
+    //testMakeFolders(); // Uncomment to unit test, recomment to use
 } else if ($argc == 2 && $argv[1] == "-h" || $argv[1] == "-?") {
     showFolderMakerUsage();
 } else if ($argc == 2) {
