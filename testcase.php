@@ -564,15 +564,11 @@ class TestCompileJava extends TestCase {
         // Compile files
         fwrite($handle, "Command: $this->cmd\n");
         if (strtoupper(substr(php_uname('s'), 0, 3)) === 'WIN') {
-//            $errout = ERROUT;  // errout collects info for Windows
-//            $info = `$errout $this->cmd`;
-//echo "cmd=";var_dump("$this->cmd >1 out.log 2>&1");
-            $info = `$this->cmd 1> out.msg 2>&1`;
+            $errout = ERROUT;  // errout collects info for Windows
+            $info = `$errout $this->cmd`;
         } else {
             $info = `$this->cmd 2>&1`;
         }
-        $info = file_get_contents('out.msg');
-echo "info=";var_dump($info);
         $info = trim($info);
         fwrite($handle, $info."\n");
         if (substr_count($info, "Usage: javac") != 0) {
@@ -722,10 +718,6 @@ class TestFileExists extends TestCase {
             } else {
                 $filesFound = glob($glob, GLOB_BRACE);
             }
-            // Following for odd chars in file name like [ ] added 9/10/2019
-            if (!$filesFound && file_exists($glob)) {
-                $filesFound = array($glob);
-            }
             if ($filesFound) {
                 $fileList = array_merge($fileList, $filesFound);
             }
@@ -739,7 +731,7 @@ class TestFileExists extends TestCase {
 }
 /**
     Tests if all of a list of patterns exists in every file meeting $glob.
-*/
+ */
 class TestMatch extends TestCase {
     var $patList;
     var $fileList;
