@@ -18,7 +18,7 @@ class Readme {
     private $studentName = "";
     private $isExtraCredit = false;
     private $isPairProg = false;
-    private $partnerName = "n/a";
+//    private $partnerName = "n/a";
     private $hoursClaim = 0;
     private $fileContents = "";
 
