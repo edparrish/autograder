@@ -452,11 +452,15 @@ class TestCompileCPP extends TestCase {
             $info = `$cmd 2>&1`; // run at command line
         }
         $info = trim($info);
+        $errors = substr_count($info, "error:");
+        $outMax = 1500;
+        if (strlen($info) > $outMax) {
+            $info = substr($info, 0, $outMax - 9).'(more)...';
+        }
         chdir($cwd); // return to original working dir
         // Collect errors and warnings
         fwrite($handle, "*Compiler Output\n");
         fwrite($handle, $info);
-        $errors = substr_count($info, "error:");
         if (substr_count($info, "No such file or directory") != 0) {
             $msg = "Compiler cannot find your .cpp file (spaces in pathname or bad include?)";
             fwrite($handle, "\n\n$msg.\n");
@@ -566,14 +570,14 @@ class TestCompileJava extends TestCase {
         if (strtoupper(substr(php_uname('s'), 0, 3)) === 'WIN') {
             $errout = ERROUT;  // errout collects info for Windows
             $info = `$errout $this->cmd`;
-//echo "cmd=";var_dump("$this->cmd >1 out.log 2>&1");
-//            $info = `$this->cmd 1> out.msg 2>&1`;
-            $info = `$this->cmd 2>&1`;
+            $info = `$this->cmd 1> out.msg 2>&1`;
+            //$info = `$this->cmd 2>&1`; // changed 10/18/2019
         } else {
             $info = `$this->cmd 2>&1`;
         }
         $info = file_get_contents('out.msg');
-//echo "info=";var_dump($info);
+        unlink('out.msg');
+        //echo "info=";var_dump($info); // debug
         $info = trim($info);
         fwrite($handle, $info."\n");
         if (substr_count($info, "Usage: javac") != 0) {
@@ -591,9 +595,6 @@ class TestCompileJava extends TestCase {
         } else if ($errors != 0) {
             $msg = "Errors found during compile (x$errors)";
             $tr->add($sectionName, $this->testName, $msg, 0);
-//        } else if (strlen($info) != 0) { // removed 11/3/17
-//            $msg = "Problems running $this->cmd\n$info";
-//            $tr->add($sectionName, $this->testName, $msg, 0);
         } else {
             $msg = "No errors during compile\n";
             fwrite($handle, $msg);
@@ -650,7 +651,7 @@ class TestCondition extends TestCase {
         @return the initial condition.
      */
     function runTest(&$testResult, $sectionName) {
-        if ($this->condition and ($this->msg or $this->value)) {
+        if ($this->condition && ($this->msg or $this->value)) {
             $testResult->add($sectionName, $this->testName,
                 $this->msg, $this->value);
         }
@@ -899,7 +900,7 @@ class TestMatchCount extends TestCase {
     function runTest(&$tr, $sectionName) {
         if (!$this->fileList) {
             echo "No files to TestMatchCount: ";
-            debug_print_backtrace();
+            //debug_print_backtrace();
         }
         $numItemMatches = 0;
         foreach($this->patList as $pattern) {

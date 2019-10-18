@@ -276,11 +276,45 @@ class Readme {
     }
 
     /**
+        Finds whether or not a partner was claimed in the README file.
+
+        @return true if partner was claimed, otherwise false.
+     */
+    function findPairProgClaim() {
+        $rmfc = $this->fileContents;
+        // Extract all mentions of pair programming
+        $re = "/.*pair(?:\s+|-)?program[\w: ]+\s*.+/i";
+        $matches = $rmfc->extractAll($re);
+        isset($matches[0]) ? $infoList = $matches[0] : $infoList = array();
+        // Remove entry if negative signal or indication in pair-program info
+        $stopWordsRE = array('\bnone\b', '\bn\/a\b', '\bno\b', '\bnot\b',
+            '\b(?:my)self\b', '\bme\b', '\bOS\b', '\bJoe\s+Partner\b');
+        foreach ($infoList as $i=>$info) {
+            foreach ($stopWordsRE as $re) {
+                if (preg_match("/$re/i", $info)) {
+                    unset($infoList[$i]);
+                    break; // exit inner loop
+                }
+            }
+        }
+        //echo "infoList=";var_dump($infoList); // debug
+        // if no pair-programming claims remain then return false
+        if (count($infoList) === 0) return false;
+        // Return false if pair programming hours === 0
+        $re = "/with\s*parte?ner[: ]*([0-9.]+).*\n/i";
+        $matches = $rmfc->extractFirst($re);
+        if (isset($matches[1]) && floatval($matches[1]) == 0) return false;
+        // NTR: could remove stop words to find student name
+        // If still good return true
+        return true;
+    }
+    /**
         Finds whether or not a partner was claimed in the README file and
         records partner name if found.
 
         @return true if partner was claimed, otherwise false.
      */
+/* old pre 9/25/2019
     function findPairProgClaim() {
         $rmfc = $this->fileContents;
         $pat = "/Parte?ner:?\s*(\b\w{3,}\b)/i"; // updated 9/30/15
@@ -299,10 +333,11 @@ class Readme {
         $parts = $rmfc->extractFirst($pat);
         if (isset($parts[1]) && floatval($parts[1]) > 0) return true;
         // Look for a claim of pair programming
-        // Following removed 3/20/2019
-        //if ($rmfc->extractFirst("/Pair(\s+|-)?program/i")) return true;
+        // Following removed 3/20/2019--added back on 9/25/2019
+        if ($rmfc->extractFirst("/Pair(\s+|-)?program/i")) return true;
         return false;
     }
+*/
 }
 
 // Uncomment the following to run unit tests
