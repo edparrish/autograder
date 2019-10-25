@@ -136,6 +136,13 @@ class FileContents {
     }
 
     /**
+        Removes any null bytes found in the contents.
+     */
+    public function removeNullBytes() {
+        $this->contents = str_replace("\0", "", $this->contents);
+    }
+
+    /**
         Returns part of the contents of this object.
 
         @param $start The index of the first character.
