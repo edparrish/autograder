@@ -283,7 +283,7 @@ class Readme {
     function findPairProgClaim() {
         $rmfc = $this->fileContents;
         // Extract all mentions of pair programming
-        $re = "/.*pair(?:\s+|-)?program[\w: ]+\s*.+/i";
+        $re = "/.*pair(?:\s+|-)?program[\w ]+:\s*.+/i";
         $matches = $rmfc->extractAll($re);
         isset($matches[0]) ? $infoList = $matches[0] : $infoList = array();
         // Remove entry if negative signal or indication in pair-program info
